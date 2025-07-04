@@ -1,0 +1,42 @@
+name: Deploy Bot
+
+on:
+  push:
+    branches:
+      - deployment/production
+      - deployment/staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: |
+      if [[ "${{ github.ref_name }}" == "deployment/production" ]]; then
+        echo "production"
+      else
+        echo "staging"
+      fi
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create .env file
+        run: |
+          if [[ "${{ github.ref_name }}" == "deployment/production" ]]; then
+            echo "DISCORD_TOKEN=${{ secrets.PROD_DISCORD_TOKEN }}" > ./dist/.env
+          else
+            echo "DISCORD_TOKEN=${{ secrets.STAGING_DISCORD_TOKEN }}" > ./dist/.env
+          fi
+
+      - name: Rsync project to VPS
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./dist/ root@${{ secrets.SSH_HOST }}:/home/root/discord-ts-new/
