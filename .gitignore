@@ -1,0 +1,9 @@
+# Node
+node_modules
+dist
+.env
+
+# macOS / VS Code / misc
+.DS_Store
+*.log
+.vscode
