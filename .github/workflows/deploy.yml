@@ -31,4 +31,4 @@ jobs:
         run: |
           rsync -avz \
             -e "ssh -i ~/.ssh/id_rsa" \
-            ./dist/ root@${{ secrets.SSH_HOST }}:/home/root/discord-ts-new/
+            ./dist/ root@${{ secrets.SSH_HOST }}:/home/discord-ts-new/
