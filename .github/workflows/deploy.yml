@@ -9,12 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: |
-      if [[ "${{ github.ref_name }}" == "deployment/production" ]]; then
-        echo "production"
-      else
-        echo "staging"
-      fi
+    environment: staging
 
     steps:
       - name: Checkout
@@ -30,12 +25,7 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./dist
-
-          if [[ "${{ github.ref_name }}" == "deployment/production" ]]; then
-            echo "DISCORD_TOKEN=${{ secrets.PROD_DISCORD_TOKEN }}" > ./dist/.env
-          else
-            echo "DISCORD_TOKEN=${{ secrets.STAGING_DISCORD_TOKEN }}" > ./dist/.env
-          fi
+          echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" > ./dist/.env
 
       - name: Rsync project to VPS
         run: |
