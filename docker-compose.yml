@@ -1,0 +1,9 @@
+services:
+  bot:
+    build:
+      context: .
+    image: discord-ts-new
+    command: node dist/index.js
+    environment:
+      - DISCORD_TOKEN
+    restart: unless-stopped
