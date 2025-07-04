@@ -47,3 +47,7 @@ jobs:
           rsync -avz \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/discord-ts-new/
+
+      - name: Restart Ubuntu Service
+        run: |
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart discord-ts-new.service"
