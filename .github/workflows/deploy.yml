@@ -29,6 +29,8 @@ jobs:
 
       - name: Create .env file
         run: |
+          mkdir -p ./dist
+
           if [[ "${{ github.ref_name }}" == "deployment/production" ]]; then
             echo "DISCORD_TOKEN=${{ secrets.PROD_DISCORD_TOKEN }}" > ./dist/.env
           else
