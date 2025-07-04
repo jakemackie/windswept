@@ -1,5 +1,5 @@
 services:
-  bot:
+  client:
     build:
       context: .
     image: discord-ts-new
