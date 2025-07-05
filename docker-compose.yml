@@ -3,20 +3,19 @@ services:
   client:
     build:
       context: .
-    image: discord-ts-new
+    image: windswept
     command: node dist/index.js
     environment:
       - DISCORD_TOKEN
     restart: unless-stopped
     profiles:
       - local
-      - ""  # default profile
 
   # Service for CI/CD with .env file
   client-ci:
     build:
       context: .
-    image: discord-ts-new
+    image: windswept
     command: node dist/index.js
     environment:
       - DISCORD_TOKEN
