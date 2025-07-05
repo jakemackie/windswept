@@ -7,4 +7,4 @@ fi
 
 # Run docker with doppler secrets
 echo -e "🐳 Docker container starting..."
-doppler run -- docker-compose up $BUILD_FLAG
+doppler run -- docker-compose --profile local up $BUILD_FLAG

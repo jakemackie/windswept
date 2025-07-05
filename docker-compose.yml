@@ -1,9 +1,27 @@
 services:
+  # Service for local development with Doppler (default)
   client:
     build:
       context: .
     image: discord-ts-new
     command: node dist/index.js
+    environment:
+      - DISCORD_TOKEN
+    restart: unless-stopped
+    profiles:
+      - local
+      - ""  # default profile
+
+  # Service for CI/CD with .env file
+  client-ci:
+    build:
+      context: .
+    image: discord-ts-new
+    command: node dist/index.js
+    environment:
+      - DISCORD_TOKEN
     env_file:
       - .env
     restart: unless-stopped
+    profiles:
+      - ci
