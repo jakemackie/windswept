@@ -43,7 +43,7 @@ function isValidEvent(event: unknown, filename: string): event is EventDefinitio
  */
 async function loadEventModule(filePath: string, filename: string): Promise<EventDefinition | null> {
   try {
-    const eventModule: EventModule = await import(filePath);
+    const eventModule: EventModule = await import(pathToFileURL(filePath).href);
     const event = eventModule.default;
 
     return isValidEvent(event, filename) ? event : null;
