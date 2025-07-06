@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
-import { loadEvents } from './hooks/events.js';
+import { loadEvents } from './hooks/event.js';
 
 config();
 
