@@ -1,8 +1,4 @@
-# PowerShell script to start Docker container with Doppler secrets
-
-param(
-    [switch]$Build
-)
+param([switch]$Build)
 
 $BUILD_FLAG = ""
 if ($Build) {

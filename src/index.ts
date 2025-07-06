@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
+import { loadEvents } from './hooks/events.js';
 
 config();
 
@@ -11,15 +12,7 @@ const client = new Client({
   ],
 });
 
-client.once('ready', () => {
-  console.log(`Logged in as ${client.user?.tag}`);
-});
-
-client.on('messageCreate', (message) => {
-  if (message.content === '!ping') {
-    message.reply('Pong!');
-  }
-});
+await loadEvents(client);
 
 // Ensure the token is present (fail fast if not)
 const token = process.env.DISCORD_TOKEN;
