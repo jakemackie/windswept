@@ -73,10 +73,14 @@ export async function loadEvents(client: Client): Promise<void> {
     const allFiles = await readdir(eventsPath);
     const eventFiles = filterEventFiles(allFiles);
 
-    for (const filename of eventFiles) {
+    const eventPromises = eventFiles.map(async (filename) => {
       const filePath = join(eventsPath, filename);
-      const event = await loadEventModule(filePath, filename);
+      return loadEventModule(filePath, filename);
+    });
 
+    const events = await Promise.all(eventPromises);
+
+    for (const event of events) {
       if (event) {
         registerEvent(client, event);
       }
