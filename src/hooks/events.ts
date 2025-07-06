@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join } from 'path';
 import { readdir } from 'fs/promises';
 
