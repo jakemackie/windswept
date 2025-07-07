@@ -1,12 +1,12 @@
 {
-  "name": "discord-ts-new",
+  "name": "windswept",
   "version": "1.0.0",
-  "description": "",
+  "description": "A production-grade Typescript Discord bot built to run easily inside a Docker container making use of the newest tooling for a lovely dev experience.",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc --watch",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "deploy": "doppler run -- node ./scripts/deploy-commands.js"
   },
   "keywords": [],
   "author": "",

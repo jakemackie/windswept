@@ -1,0 +1,26 @@
+services:
+  # Service for local development with Doppler (default)
+  client:
+    build:
+      context: .
+    image: windswept
+    command: node dist/index.js
+    environment:
+      - DISCORD_TOKEN
+    restart: unless-stopped
+    profiles:
+      - local
+
+  # Service for CI/CD with .env file
+  client-ci:
+    build:
+      context: .
+    image: windswept
+    command: node dist/index.js
+    environment:
+      - DISCORD_TOKEN
+    env_file:
+      - .env
+    restart: unless-stopped
+    profiles:
+      - ci
