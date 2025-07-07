@@ -21,8 +21,9 @@ export const loadCommands = async (client: windswept) => {
 
 			if ('data' in command && 'execute' in command) {
 				client.commands.set(command.data.name, command);
+				console.log(`Loaded command: ${command.data.name} from ${filePath}`);
 			} else {
-				console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+				console.error(`${filePath} is missing a required "data" or "execute" property.`);
 			}
 		}
 	}
