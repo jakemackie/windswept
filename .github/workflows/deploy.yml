@@ -71,7 +71,7 @@ jobs:
               -d "$(jq -n \
                 --arg title "✅ Production Deployment" \
                 --arg desc "[${{ github.ref_name }}](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}) [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" \
-                --argjson color 5763719 \
+                --argjson color 13877439 \
                 '{embeds: [{title: $title, description: $desc, color: $color}]}' \
               )" \
               ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -140,7 +140,7 @@ jobs:
               -d "$(jq -n \
                 --arg title "🧪 Staging Deployment" \
                 --arg desc "[${{ github.ref_name }}](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}) [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" \
-                --argjson color 10181046 \
+                --argjson color 13877439 \
                 '{embeds: [{title: $title, description: $desc, color: $color}]}' \
               )" \
               ${{ secrets.DISCORD_WEBHOOK_URL }}
