@@ -12,7 +12,13 @@ export class windswept extends Client {
 
 	constructor() {
 		super({
-			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildPresences]
+			intents: [
+				GatewayIntentBits.Guilds,
+				GatewayIntentBits.GuildPresences,
+				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.MessageContent
+			],
+			allowedMentions: { repliedUser: false }
 		});
 
 		this.commands = new Collection();
