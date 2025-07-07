@@ -63,6 +63,14 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart discord-ts-new.service"
 
+      - name: Notify Discord of Staging Deployment
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🚀 Staging deployment successful!\nBranch: \`${{ github.ref_name }}\`\nCommit: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})\nTriggered by: ${{ github.actor }}\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
   deploy-production:
     if: github.ref == 'refs/heads/deployment/production'
     runs-on: ubuntu-latest
@@ -118,3 +126,11 @@ jobs:
       - name: Restart Ubuntu Service
         run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
+
+      - name: Notify Discord of Production Deployment
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🎉 **Production deployment completed!**\nBranch: \`${{ github.ref_name }}\`\nCommit: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})\nTriggered by: ${{ github.actor }}\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
