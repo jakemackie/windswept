@@ -67,9 +67,14 @@ jobs:
         if: success()
         run: |
           curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\": \"🚀 Staging deployment successful!\nBranch: \`${{ github.ref_name }}\`\nCommit: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})\nTriggered by: ${{ github.actor }}\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+              -X POST \
+              -d "$(jq -n \
+                --arg title "✅ Production Deployment" \
+                --arg desc "[${{ github.ref_name }}](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}) [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" \
+                --argjson color 5763719 \
+                '{embeds: [{title: $title, description: $desc, color: $color}]}' \
+              )" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy-production:
     if: github.ref == 'refs/heads/deployment/production'
@@ -131,6 +136,11 @@ jobs:
         if: success()
         run: |
           curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\": \"🎉 **Production deployment completed!**\nBranch: \`${{ github.ref_name }}\`\nCommit: [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})\nTriggered by: ${{ github.actor }}\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+              -X POST \
+              -d "$(jq -n \
+                --arg title "🧪 Staging Deployment" \
+                --arg desc "[${{ github.ref_name }}](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}) [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" \
+                --argjson color 10181046 \
+                '{embeds: [{title: $title, description: $desc, color: $color}]}' \
+              )" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
