@@ -1,0 +1,68 @@
+name: Deploy Bot (Production)
+
+on:
+  push:
+    branches:
+      - deployment/production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install --no-audit
+
+      - name: Build Typescript
+        run: npm run build
+
+      - name: Create .env file
+        run: echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" > ./.env
+
+      - name: Rsync to VPS
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
+
+      - name: Restart Service
+        run: ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
+
+      - name: Notify Discord
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "$(jq -n \
+                --arg title "🚀 Production Deployment" \
+                --arg desc "**[${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})**" \
+                --argjson color 13877439 \
+                '{embeds: [{title: $title, description: $desc, color: $color}]}' \
+              )" \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
