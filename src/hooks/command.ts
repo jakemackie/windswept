@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { windswept } from '../types/Client';
+import { windswept } from '../client/windswept.js';
 
 // ESM-compatible __dirname
 const __filename = fileURLToPath(import.meta.url);

@@ -3,7 +3,7 @@ import {
     Collection,
     GatewayIntentBits
 } from "discord.js";
-import type { Command } from './Command.js';
+import type { Command } from "../types/Command.js";
 import { loadEvents } from '../hooks/event.js';
 import { loadCommands } from '../hooks/command.js';
 

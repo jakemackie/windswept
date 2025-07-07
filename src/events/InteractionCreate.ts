@@ -3,7 +3,7 @@ import {
   MessageFlags,
   type Interaction 
 } from 'discord.js';
-import type { windswept } from '../types/Client.js';
+import type { windswept } from '../client/windswept.js';
 
 export default {
   name: Events.InteractionCreate,
