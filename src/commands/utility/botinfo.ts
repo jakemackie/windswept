@@ -25,7 +25,7 @@ export default {
             : 'Not ready';
 
         const embed = new EmbedBuilder()
-            .setColor(0xa3b6ff)
+            .setColor(0xd4c0bf)
             .setTitle(`${user?.username ?? 'Bot'} info`)
             .setThumbnail(clientAvatarUrl)
             .addFields(
