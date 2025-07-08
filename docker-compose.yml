@@ -13,6 +13,16 @@ services:
     networks:
       - windswept-net
 
+  migrate:
+    image: jakemackie/windswept:latest
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db
+    networks:
+      - windswept-net
+
   client:
     image: jakemackie/windswept:latest
     command: node dist/index.js
@@ -20,7 +30,7 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
     restart: unless-stopped
     depends_on:
-      - db
+      - migrate
     networks:
       - windswept-net
 
