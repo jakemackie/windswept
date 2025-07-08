@@ -43,16 +43,28 @@ jobs:
         run: npm run build
 
       - name: Create .env file
-        run: echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" > ./.env
+        run: |
+          cat > ./.env << EOF
+          DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          PGADMIN_EMAIL=${{ secrets.PGADMIN_EMAIL }}
+          PGADMIN_PASSWORD=${{ secrets.PGADMIN_PASSWORD }}
+          EOF
 
       - name: Rsync to VPS
         run: |
           rsync -avz \
+            --exclude='.git' \
+            --exclude='node_modules' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 
-      - name: Restart Service
-        run: ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
+      - name: Restart Docker Compose Services
+        run: |
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} \
+            "cd /home/windswept && docker compose down && docker compose up -d"
 
       - name: Notify Discord
         if: success()

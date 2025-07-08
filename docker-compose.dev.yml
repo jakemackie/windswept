@@ -3,24 +3,26 @@ services:
     image: postgres:16
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: windswept
+      POSTGRES_PASSWORD: windswept
+      POSTGRES_DB: windswept
     volumes:
-      - pgdata_prod:/var/lib/postgresql/data
+      - pgdata_dev:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - windswept-net
 
   client:
-    image: jakemackie/windswept:latest
+    build:
+      context: .
+    image: jakemackie/windswept:dev
     command: node dist/index.js
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
     restart: unless-stopped
-    depends_on:
-      - db
+    volumes:
+      - ./dist:/app/dist
     networks:
       - windswept-net
 
@@ -28,15 +30,18 @@ services:
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - windswept-net
 
 volumes:
-  pgdata_prod:
+  pgdata_dev:
 
 networks:
   windswept-net:
