@@ -18,6 +18,7 @@ services:
     command: node dist/index.js
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
     restart: unless-stopped
     depends_on:
       - db

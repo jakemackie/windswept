@@ -49,9 +49,16 @@ jobs:
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}?schema=public
           PGADMIN_EMAIL=${{ secrets.PGADMIN_EMAIL }}
           PGADMIN_PASSWORD=${{ secrets.PGADMIN_PASSWORD }}
           EOF
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      - name: Prisma migrate
+        run: npx prisma migrate deploy
 
       - name: Rsync to VPS
         run: |
