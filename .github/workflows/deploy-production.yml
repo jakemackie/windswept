@@ -64,7 +64,7 @@ jobs:
       - name: Restart Docker Compose Services
         run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} \
-            "cd /home/windswept && docker compose down && docker compose up -d"
+            "cd /home/windswept && docker compose up -d --build"
 
       - name: Notify Discord
         if: success()
