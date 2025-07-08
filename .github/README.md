@@ -1,6 +1,6 @@
 - [x] Setup deployment environments
+- [x] Connect Database to project
 - [ ] Establish reusable bot UI
-- [ ] Connect Database to project
 - [ ] Add prefix support
 - [ ] Continuous command development
 - [ ] Future website?
