@@ -21,6 +21,8 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
+    volumes:
+      - ./prisma:/app/prisma
     networks:
       - windswept-net
 
