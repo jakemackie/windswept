@@ -3,14 +3,13 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm ci && npm install prisma
 
-COPY . .
+COPY dist ./dist
+COPY prisma ./prisma
+COPY .env .env
 
 RUN npx prisma generate
-
-RUN npm run build
 
 USER node
 
