@@ -15,6 +15,7 @@ services:
 
   migrate:
     image: jakemackie/windswept:latest
+    platform: linux/amd64
     command: npx prisma migrate deploy
     environment:
       DATABASE_URL: ${DATABASE_URL}
@@ -25,6 +26,7 @@ services:
 
   client:
     image: jakemackie/windswept:latest
+    platform: linux/amd64
     command: node dist/index.js
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
