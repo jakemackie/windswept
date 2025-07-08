@@ -23,9 +23,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./dist:/app/dist
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - windswept-net
 

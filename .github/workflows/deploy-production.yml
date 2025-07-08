@@ -58,7 +58,6 @@ jobs:
           rsync -avz \
             --exclude='.git' \
             --exclude='node_modules' \
-            --exclude='.env' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 

@@ -32,9 +32,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "5050:80"
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - windswept-net
 
