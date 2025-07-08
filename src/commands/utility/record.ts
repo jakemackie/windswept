@@ -1,8 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../lib/prisma.js';
 
 export default {
   name: 'record',
