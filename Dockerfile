@@ -8,6 +8,8 @@ RUN npm ci && npm install prisma
 
 COPY . .
 
+RUN npx prisma generate
+
 RUN npm run build
 
 USER node
