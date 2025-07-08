@@ -51,6 +51,7 @@ jobs:
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           PGADMIN_EMAIL=${{ secrets.PGADMIN_EMAIL }}
           PGADMIN_PASSWORD=${{ secrets.PGADMIN_PASSWORD }}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}?schema=public
           EOF
 
       - name: Rsync to VPS
@@ -59,12 +60,12 @@ jobs:
             --exclude='.git' \
             --exclude='node_modules' \
             -e "ssh -i ~/.ssh/id_rsa" \
-            ./ root@${{ secrets.SSH_HOST }}:/home/discord-ts-new/
+            ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 
       - name: Restart Docker Compose Services
         run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} \
-            "cd /home/discord-ts-new && docker compose down && docker compose up -d"
+            "cd /home/windswept && docker compose up -d --build"
 
       - name: Notify Discord
         if: success()
