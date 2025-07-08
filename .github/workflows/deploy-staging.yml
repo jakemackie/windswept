@@ -59,12 +59,12 @@ jobs:
             --exclude='.git' \
             --exclude='node_modules' \
             -e "ssh -i ~/.ssh/id_rsa" \
-            ./ root@${{ secrets.SSH_HOST }}:/home/discord-ts-new/
+            ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 
       - name: Restart Docker Compose Services
         run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} \
-            "cd /home/discord-ts-new && docker compose down && docker compose up -d"
+            "cd /home/windswept && docker compose down && docker compose up -d"
 
       - name: Notify Discord
         if: success()
