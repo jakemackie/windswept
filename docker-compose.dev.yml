@@ -20,9 +20,12 @@ services:
     command: node dist/index.js
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
     restart: unless-stopped
     volumes:
       - ./dist:/app/dist
+      - ./prisma:/app/prisma
+
     networks:
       - windswept-net
 
