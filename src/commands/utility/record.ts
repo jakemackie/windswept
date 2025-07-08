@@ -21,14 +21,14 @@ export default {
     if (text) {
       // Upsert the record
       await prisma.record.upsert({
-        where: { userId },
+        where: { userId: userId },
         update: { text },
-        create: { userId, text },
+        create: { userId: userId, text },
       });
       await interaction.reply({ content: 'Your record has been saved!' });
     } else {
       // Fetch the record
-      const record = await prisma.record.findUnique({ where: { userId } });
+      const record = await prisma.record.findUnique({ where: { userId: userId } });
       if (record?.text) {
         await interaction.reply({ content: `Your record: ${record.text}` });
       } else {
