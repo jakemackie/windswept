@@ -67,8 +67,11 @@ jobs:
 
       - name: Restart Docker Compose Services
         run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} \
-            "cd /home/windswept && docker compose up -d --build --force-recreate"
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /home/windswept
+            docker compose build --no-cache
+            docker compose up -d --force-recreate
+          EOF
 
       - name: Notify Discord
         if: success()
