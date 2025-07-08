@@ -5,9 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci && npm install prisma
 
-COPY dist ./dist
-COPY prisma ./prisma
-COPY .env .env
+COPY . .
 
 RUN npx prisma generate
 
