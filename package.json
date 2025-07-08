@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "doppler secrets download --format env --no-file > .env && docker compose -f docker-compose.dev.yml up --build",
+    "dev": "doppler run -- docker compose -f docker-compose.dev.yml up --build",
     "stop": "docker compose -f docker-compose.dev.yml down",
-    "clean": "docker compose -f docker-compose.dev.yml down -v",
+    "clean": "docker compose down -v",
     "deploy": "doppler run -- node ./scripts/deploy-commands.js",
     "migrate:dev": "doppler run -- npx prisma migrate dev"
   },
