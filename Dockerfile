@@ -12,6 +12,9 @@ COPY src ./src
 # Run prisma generate *after* copying source and prisma schema
 RUN npx prisma generate
 
+COPY src ./src
+COPY dist ./dist
+
 # Build Typescript inside image
 RUN npm run build
 
