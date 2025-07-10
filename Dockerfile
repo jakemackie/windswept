@@ -1,24 +1,27 @@
-FROM node:20-alpine
+# Assuming you're using a multi-stage Docker build
+FROM node:20 AS builder
 
 WORKDIR /app
 
+# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
-COPY prisma ./prisma/
-COPY tsconfig.json ./
-COPY src ./src
-
-# Run prisma generate *after* copying source and prisma schema
+# Copy Prisma schema before running generate
+COPY prisma ./prisma
 RUN npx prisma generate
 
-COPY src ./src
-COPY dist ./dist
+# Copy the rest of your app
+COPY . .
 
-# Build Typescript inside image
+# Build your app (if using TypeScript or bundling)
 RUN npm run build
 
-# Use non-root user
-USER node
+# Start from a clean image if needed, or use the same one
+FROM node:20
+WORKDIR /app
 
+COPY --from=builder /app /app
+
+# Make sure .prisma/client exists
 CMD ["node", "dist/index.js"]
