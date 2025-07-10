@@ -21,8 +21,6 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
-    volumes:
-      - ./prisma/schema.prisma:/app/prisma/schema.prisma
     networks:
       - windswept-net
     restart: "no"
@@ -36,8 +34,6 @@ services:
     restart: unless-stopped
     depends_on:
       - migrate
-    volumes:
-      - ./prisma/schema.prisma:/app/prisma/schema.prisma
     networks:
       - windswept-net
 
