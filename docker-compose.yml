@@ -14,6 +14,8 @@ services:
       - windswept-net
 
   migrate:
+    build:
+      context: .
     image: jakemackie/windswept:latest
     platform: linux/amd64
     command: npx prisma migrate deploy
@@ -26,6 +28,8 @@ services:
     restart: "no"
 
   generate:
+    build:
+      context: .
     image: jakemackie/windswept:latest
     platform: linux/amd64
     command: npx prisma generate
@@ -38,6 +42,8 @@ services:
     restart: "no"
 
   client:
+    build:
+      context: .
     image: jakemackie/windswept:latest
     platform: linux/amd64
     command: node dist/index.js
