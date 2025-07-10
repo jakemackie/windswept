@@ -25,6 +25,18 @@ services:
       - windswept-net
     restart: "no"
 
+  generate:
+    image: jakemackie/windswept:latest
+    platform: linux/amd64
+    command: npx prisma generate
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - migrate
+    networks:
+      - windswept-net
+    restart: "no"
+
   client:
     image: jakemackie/windswept:latest
     platform: linux/amd64
@@ -33,7 +45,7 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
     restart: unless-stopped
     depends_on:
-      - migrate
+      - generate
     networks:
       - windswept-net
 

@@ -45,6 +45,9 @@ jobs:
       - name: Build Typescript
         run: npm run build
 
+      - name: Build Docker Image
+        run: docker build -t jakemackie/windswept:latest .
+
       - name: Create .env file
         run: |
           cat > ./.env << EOF

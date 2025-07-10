@@ -21,7 +21,16 @@ RUN npm run build
 FROM node:20
 WORKDIR /app
 
-COPY --from=builder /app /app
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy Prisma schema and generate client
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# Copy built application
+COPY --from=builder /app/dist ./dist
 
 # Make sure .prisma/client exists
 CMD ["node", "dist/index.js"]
