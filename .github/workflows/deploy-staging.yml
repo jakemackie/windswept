@@ -39,9 +39,6 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
       - name: Build Typescript
         run: npm run build
 
