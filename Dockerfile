@@ -2,16 +2,18 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy prisma schema first
 COPY prisma ./prisma/
+COPY tsconfig.json ./
+COPY src ./src
+
+# Run prisma generate *after* copying source and prisma schema
 RUN npx prisma generate
 
-# Then copy the rest of the app
-COPY . .
+# Build Typescript inside image
+RUN npm run build
 
 # Use non-root user
 USER node
