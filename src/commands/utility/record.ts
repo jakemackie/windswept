@@ -15,23 +15,27 @@ export default {
   async execute(interaction: ChatInputCommandInteraction) {
     const userId = interaction.user.id;
     const text = interaction.options.getString('text');
+    const existing = await prisma.record.findFirst({ where: { userId } });
+
+    if (!existing && !text) {
+      await interaction.reply({ content: 'You have no saved record.' });
+      return;
+    }
 
     if (text) {
-      // Upsert the record
-      await prisma.record.upsert({
-        where: { userId: userId },
-        update: { text },
-        create: { userId: userId, text },
-      });
+      if (existing) {
+        await prisma.record.update({
+          where: { id: existing.id },
+          data: { text },
+        });
+      } else {
+        await prisma.record.create({
+          data: { userId, text },
+        });
+      }
       await interaction.reply({ content: 'Your record has been saved!' });
     } else {
-      // Fetch the record
-      const record = await prisma.record.findUnique({ where: { userId: userId } });
-      if (record?.text) {
-        await interaction.reply({ content: `Your record: ${record.text}` });
-      } else {
-        await interaction.reply({ content: 'You have no saved record.' });
-      }
+      await interaction.reply({ content: `Your record: ${existing!.text}` });
     }
   }
 };
