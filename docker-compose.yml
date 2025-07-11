@@ -35,9 +35,7 @@ services:
     restart: "no"
 
   backup:
-    build:
-      context: .
-    image: jakemackie/windswept:latest
+    image: postgres:16
     platform: linux/amd64
     command: |
       sh -c "
