@@ -21,10 +21,10 @@ interface EventDefinition {
 }
 
 /**
- * Filters directory contents to find valid TypeScript/JavaScript event files
+ * Filters directory contents to find valid JavaScript event files
  */
 function filterEventFiles(files: string[]): string[] {
-  return files.filter(file => file.endsWith('.ts') || file.endsWith('.js'));
+  return files.filter(file => file.endsWith('.js'));
 }
 
 /**
