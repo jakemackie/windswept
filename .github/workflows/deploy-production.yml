@@ -67,7 +67,7 @@ jobs:
 
       - name: Restart Docker Compose Services
         run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -tt -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
             cd /home/windswept
             docker compose build --no-cache
             docker compose up -d --force-recreate
