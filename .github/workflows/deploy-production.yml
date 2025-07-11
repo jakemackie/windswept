@@ -49,7 +49,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --no-audit
+        run: npm install --omit=dev
 
       - name: Generate Prisma Client
         run: npx prisma generate
@@ -61,7 +61,6 @@ jobs:
         run: |
           rsync -avz \
             --exclude='.git' \
-            --exclude='node_modules' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 
