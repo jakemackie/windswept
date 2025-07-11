@@ -63,6 +63,10 @@ jobs:
             --exclude='.git' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
+        
+      - name: Prisma Db Push
+        run: |
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "cd /home/windswept && npx prisma db push"
 
       - name: Restart Ubuntu Service
         run: |

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "doppler run -- docker compose -f docker-compose.dev.yml up --build",
     "stop": "docker compose -f docker-compose.dev.yml down",
     "clean": "docker compose down -v",
