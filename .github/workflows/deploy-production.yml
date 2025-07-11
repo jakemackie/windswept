@@ -67,10 +67,11 @@ jobs:
 
       - name: Restart Docker Compose Services
         run: |
-          ssh -tt -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
             cd /home/windswept
-            docker compose build --no-cache --progress=plain
-            docker compose up -d --force-recreate
+            docker compose build --no-cache
+            chmod +x scripts/safe-deploy.sh
+            ./scripts/safe-deploy.sh
           EOF
 
       - name: Notify Discord
