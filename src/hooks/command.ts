@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { windswept } from '../client/windswept.js';
+import { pathToFileURL } from 'url';
 
-// ESM-compatible __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,7 +17,7 @@ export const loadCommands = async (client: windswept) => {
 
 		for (const file of commandFiles) {
 			const filePath = path.join(commandsPath, file);
-			const command = (await import(filePath)).default;
+			const command = (await import(pathToFileURL(filePath).href)).default;
 
 			if ('data' in command && 'execute' in command) {
 				client.commands.set(command.data.name, command);

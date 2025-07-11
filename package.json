@@ -5,12 +5,17 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "doppler run -- docker compose -f docker-compose.dev.yml up --build",
-    "stop": "docker compose -f docker-compose.dev.yml down",
+    "start": "doppler run -- node dist/index.js",
+    "stop": "docker compose down",
     "clean": "docker compose down -v",
+    "dev": "npm run build && docker compose -f docker-compose.dev.yml up -d && npm run start",
+    "dev:db": "docker compose -f docker-compose.dev.yml up -d",
+    "dev:db:down": "docker compose -f docker-compose.dev.yml down",
+    "dev:db:clean": "docker compose -f docker-compose.dev.yml down -v",
     "deploy": "doppler run -- node ./scripts/deploy-commands.js",
-    "migrate:dev": "doppler run -- npx prisma migrate dev"
+    "db:migrate": "doppler run -- npx prisma migrate dev",
+    "db:generate": "doppler run -- npx prisma generate",
+    "db:studio": "doppler run -- npx prisma studio"
   },
   "keywords": [],
   "author": "",

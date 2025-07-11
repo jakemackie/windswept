@@ -64,9 +64,9 @@ jobs:
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
         
-      - name: Prisma Db Push
+      - name: Prisma Migrate Deploy
         run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "cd /home/windswept && npx prisma db push"
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "cd /home/windswept && npx prisma migrate deploy"
 
       - name: Restart Ubuntu Service
         run: |
