@@ -72,8 +72,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
             cd /home/windswept
             docker compose build --no-cache
-            chmod +x scripts/safe-deploy.sh
-            ./scripts/safe-deploy.sh
+            docker compose up -d --force-recreate
           EOF
 
       - name: Notify Discord

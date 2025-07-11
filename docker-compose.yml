@@ -12,12 +12,6 @@ services:
       - "5432:5432"
     networks:
       - windswept-net
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
   migrate:
     build:
@@ -28,34 +22,10 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
     depends_on:
-      backup:
-        condition: service_completed_successfully
+      - db
     networks:
       - windswept-net
     restart: "no"
-
-  backup:
-    image: postgres:16
-    platform: linux/amd64
-    command: |
-      sh -c "
-        echo 'Creating backup before migration...'
-        pg_dump -h db -U $${POSTGRES_USER} -d $${POSTGRES_DB} > /tmp/backup_$$(date +%Y%m%d_%H%M%S).sql
-        echo 'Backup completed'
-      "
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      PGPASSWORD: ${POSTGRES_PASSWORD}
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - windswept-net
-    restart: "no"
-    volumes:
-      - ./backups:/tmp
 
   generate:
     build:
@@ -66,8 +36,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
     depends_on:
-      migrate:
-        condition: service_completed_successfully
+      - migrate
     networks:
       - windswept-net
     restart: "no"
@@ -83,8 +52,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     restart: unless-stopped
     depends_on:
-      generate:
-        condition: service_completed_successfully
+      - generate
     networks:
       - windswept-net
 
