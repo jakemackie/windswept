@@ -8,7 +8,7 @@
     "start": "doppler run -- node dist/index.js",
     "stop": "docker compose down",
     "clean": "docker compose down -v",
-    "dev": "npm run build && docker compose up -d && npm run db:migrate && npm run start",
+    "dev": "npm run build && docker compose up -d && node scripts/wait-for-db.js && npm run db:migrate && npm run start",
     "dev:db": "docker compose up -d",
     "dev:db:down": "docker compose down",
     "dev:db:clean": "docker compose down -v",
@@ -23,6 +23,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^24.0.12",
+    "pg": "^8.16.3",
     "prisma": "^6.11.1",
     "typescript": "^5.8.3"
   },
