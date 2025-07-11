@@ -70,7 +70,7 @@ jobs:
 
       - name: Restart Ubuntu Service
         run: |
-        ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
 
       - name: Notify Discord
         if: success()
