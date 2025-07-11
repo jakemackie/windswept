@@ -21,6 +21,18 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Create .env file
+        run: |
+          cat > ./.env << EOF
+          DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          PGADMIN_EMAIL=${{ secrets.PGADMIN_EMAIL }}
+          PGADMIN_PASSWORD=${{ secrets.PGADMIN_PASSWORD }}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.POSTGRES_DB }}?schema=public
+          EOF
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -37,7 +49,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --no-audit
+        run: npm install --omit=dev
 
       - name: Generate Prisma Client
         run: npx prisma generate
@@ -45,33 +57,20 @@ jobs:
       - name: Build Typescript
         run: npm run build
 
-      - name: Create .env file
-        run: |
-          cat > ./.env << EOF
-          DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
-          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          PGADMIN_EMAIL=${{ secrets.PGADMIN_EMAIL }}
-          PGADMIN_PASSWORD=${{ secrets.PGADMIN_PASSWORD }}
-          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}?schema=public
-          EOF
-
       - name: Rsync to VPS
         run: |
           rsync -avz \
             --exclude='.git' \
-            --exclude='node_modules' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
-
-      - name: Restart Docker Compose Services
+        
+      - name: Prisma Db Push
         run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /home/windswept
-            docker compose build --no-cache
-            docker compose up -d --force-recreate
-          EOF
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "cd /home/windswept && npx prisma db push"
+
+      - name: Restart Ubuntu Service
+        run: |
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
 
       - name: Notify Discord
         if: success()
