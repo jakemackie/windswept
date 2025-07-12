@@ -9,7 +9,7 @@ export default {
   name: 'botinfo',
   data: new SlashCommandBuilder()
     .setName('botinfo')
-    .setDescription('Check the bot\'s latency'),
+    .setDescription('Check the bot\'s info'),
 
   async execute(interaction: CommandInteraction) {
     const client = interaction.client as windswept;
@@ -25,11 +25,20 @@ export default {
       : 'Not ready';
 
     const embed = new EmbedBuilder()
-      .setColor(0xd4c0bf)
+      .setColor(client.color)
       .setTitle(`${user?.username ?? 'Bot'} info`)
       .setThumbnail(clientAvatarUrl)
       .addFields(
-          { name: 'Uptime', value: uptimeValue }
+          { 
+            name: 'Environment', 
+            value: client.environment, 
+            inline: false
+          },
+          { 
+            name: 'Uptime', 
+            value: uptimeValue, 
+            inline: false 
+          }
       );
 
     await interaction.reply({ embeds: [embed] });
