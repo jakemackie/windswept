@@ -9,7 +9,7 @@ export default {
   name: 'botinfo',
   data: new SlashCommandBuilder()
     .setName('botinfo')
-    .setDescription('Check the bot\'s latency'),
+    .setDescription('Check the bot\'s info'),
 
   async execute(interaction: CommandInteraction) {
     const client = interaction.client as windswept;
