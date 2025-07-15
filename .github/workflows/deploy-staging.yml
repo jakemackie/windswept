@@ -78,9 +78,9 @@ jobs:
           curl -H "Content-Type: application/json" \
               -X POST \
               -d "$(jq -n \
-                --arg title "🧪 Staging Deployment" \
-                --arg desc "**[${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})**" \
-                --argjson color 13877439 \
+                --arg title "✅ Staging Deployment" \
+                --arg desc "**> [See changes](https://github.com/${{ github.repository }}/commit/${{ github.sha }})**" \
+                --argjson color 3003904 \
                 '{embeds: [{title: $title, description: $desc, color: $color}]}' \
               )" \
               ${{ secrets.DISCORD_WEBHOOK_URL }}
