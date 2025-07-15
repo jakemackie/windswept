@@ -179,7 +179,6 @@ export default {
       });
     }
 
-    // Build minimal, dynamic embed description
     const sweptCount = deletedMessages.size;
     const sweptUser = user ? `${user}` : '';
     const messageLink = link
