@@ -65,12 +65,13 @@ export default {
     const messageUrl = `https://discord.com/channels/${interaction.guildId}/${interaction.channelId}/${firstMessage.id}`;
     const embed = new EmbedBuilder()
       .setColor(client.color)
-      .setDescription(`The first message in ${interaction.channel}`)
+      // .setDescription(`The first message in ${interaction.channel}`)
       .addFields([
         { name: 'Author', value: `${firstMessage.author}`, inline: true },
         { name: 'Timestamp', value: `<t:${Math.floor(firstMessage.createdTimestamp / 1000)}:F>`, inline: true },
         { name: 'Message Link', value: messageUrl, inline: true },
-      ]);
+      ])
+      .setAuthor({ name: firstMessage.author.username, iconURL: firstMessage.author.displayAvatarURL() });
 
     return await interaction.reply({ embeds: [embed] });
   },
