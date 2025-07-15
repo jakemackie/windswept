@@ -8,7 +8,7 @@
     "start": "doppler run -- node dist/index.js",
     "stop": "docker compose down",
     "clean": "docker compose down -v",
-    "dev": "npm run build && docker compose up -d && node scripts/wait-for-db.js && npm run db:migrate && npm run start",
+    "dev": "npm run db:generate && npm run build && docker compose up -d && node scripts/wait-for-db.js && npm run db:migrate && npm run start",
     "dev:db": "docker compose up -d",
     "dev:db:down": "docker compose down",
     "dev:db:clean": "docker compose down -v",
