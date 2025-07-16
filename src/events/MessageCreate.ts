@@ -57,12 +57,13 @@ export default {
       if (days > 0) parts.push(`${days} day${days === 1 ? '' : 's'}`);
       if (hours > 0) parts.push(`${hours} hour${hours === 1 ? '' : 's'}`);
       if (minutes > 0) parts.push(`${minutes} minute${minutes === 1 ? '' : 's'}`);
+      parts.push(`${seconds} second${seconds === 1 ? '' : 's'}`); // Always include seconds
 
       let duration: string;
-      if (parts.length === 0) {
-        duration = `${seconds} second${seconds === 1 ? '' : 's'}`;
-      } else if (parts.length === 1) {
+      if (parts.length === 1) {
         duration = parts[0];
+      } else if (parts.length === 2) {
+        duration = parts.join(' and ');
       } else {
         duration = parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
       }
