@@ -28,7 +28,7 @@ import type { Hand } from '../../types/blackjack.js';
 function createGameDisplay(userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true): string {
   const opponentDisplay = showOpponentCards 
     ? `**Opponent's Hand:** \`[${opponentHand.toString()}]\` **(${opponentHand.value})**`
-    : `**Opponent's Hand:** \`[${opponentHand.cards[0].displayName}, ?]\` **(?)**`;
+    : `**Opponent's Hand:** [${opponentHand.cards[0].displayName}, <:windswept_blackjack_z_card:1395299740433911838>] **(?)**`;
     
   return `**Blackjack Game**\n\n` +
          `**Your Hand:** \`[${userHand.toString()}]\` **(${userHand.value})**\n` +
@@ -214,9 +214,40 @@ export default {
           
           // Update opponent hand
           opponentHand = currentOpponentHand;
+
+          // If opponent busts, end game immediately
+          if (currentOpponentHand.isBust) {
+            const result = determineWinner(userHand, opponentHand);
+            const finalContainer = new ContainerBuilder()
+              .setAccentColor(client.color)
+              .addTextDisplayComponents(
+                new TextDisplayBuilder()
+                  .setContent(createGameDisplay(userHand, opponentHand, false, true) + `\n\n**${result}**`)
+              )
+              .addActionRowComponents(
+                new ActionRowBuilder<ButtonBuilder>().addComponents(
+                  new ButtonBuilder()
+                    .setCustomId('user-button-hit')
+                    .setLabel('Hit')
+                    .setStyle(ButtonStyle.Primary)
+                    .setDisabled(true),
+                  new ButtonBuilder()
+                    .setCustomId('user-button-stand')
+                    .setLabel('Stand')
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(true)
+                )
+              );
+            await i.update({
+              components: [finalContainer],
+              flags: [MessageFlags.IsComponentsV2]
+            });
+            collector.stop();
+            return;
+          }
         }
         
-        // Determine winner
+        // Determine winner (if not already ended by bust)
         const result = determineWinner(userHand, opponentHand);
         
         // Show final game state with all cards revealed
