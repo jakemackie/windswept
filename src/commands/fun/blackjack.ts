@@ -102,23 +102,26 @@ function createBlackjackEmbed(client: windswept, userHand: Hand, opponentHand: H
   // Get the first card's value
   const firstCard = opponentHand.cards[0];
   const firstCardValue = firstCard ? firstCard.value : '?';
+  let opponentCardsLine: string;
+  let opponentValueLine: string;
+  if (showOpponentCards) {
+    opponentCardsLine = `**${handToEmotes(opponentHand)}**`;
+    opponentValueLine = `(${opponentHand.value})`;
+  } else {
+    opponentCardsLine = `**${getCardEmote(firstCard)}, <:windswept_blackjack_z_card:1395299740433911838>**`;
+    opponentValueLine = `(${firstCardValue} + ?)`;
+  }
+  const description =
+    `__**Your Hand**__\n` +
+    `# ${handToEmotes(userHand)}\n` +
+    `(${userHand.value})\n\n` +
+    `__**Opponent's Hand**__\n` +
+    `# ${opponentCardsLine.replace('**','').replace('**','')}\n` +
+    `${opponentValueLine}`;
   return new EmbedBuilder()
     .setColor(client.color)
     .setTitle('Blackjack Game')
-    .addFields(
-      {
-        name: 'Your Hand',
-        value: `${handToEmotes(userHand)}\n**(${userHand.value})**`,
-        inline: true
-      },
-      {
-        name: "Opponent's Hand",
-        value: showOpponentCards
-          ? `${handToEmotes(opponentHand)}\n**(${opponentHand.value})**`
-          : `${getCardEmote(firstCard)}, <:windswept_blackjack_z_card:1395299740433911838>\n**(${firstCardValue} + ?)**`,
-        inline: true
-      }
-    )
+    .setDescription(description)
     .setFooter({ text: isUserTurn ? 'Your turn! Hit or Stand?' : "Opponent's turn..." });
 }
 
