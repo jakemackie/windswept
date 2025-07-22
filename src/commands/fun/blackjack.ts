@@ -98,7 +98,7 @@ function determineWinner(userHand: Hand, opponentHand: Hand): string {
 }
 
 // Helper to create the blackjack embed
-function createBlackjackEmbed(client: windswept, userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true): EmbedBuilder {
+function createBlackjackEmbed(client: windswept, userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true, result?: string): EmbedBuilder {
   // Get the first card's value
   const firstCard = opponentHand.cards[0];
   const firstCardValue = firstCard ? firstCard.value : '?';
@@ -108,18 +108,27 @@ function createBlackjackEmbed(client: windswept, userHand: Hand, opponentHand: H
     opponentCardsLine = `**${handToEmotes(opponentHand)}**`;
     opponentValueLine = `(${opponentHand.value})`;
   } else {
-    opponentCardsLine = `**${getCardEmote(firstCard)}, <:windswept_blackjack_z_card:1395299740433911838>**`;
+    opponentCardsLine = `**${getCardEmote(firstCard)} <:windswept_blackjack_z_card:1395299740433911838>**`;
     opponentValueLine = `(${firstCardValue} + ?)`;
   }
   const description =
-    `__**Your Hand**__\n` +
-    `# ${handToEmotes(userHand)}\n` +
-    `(${userHand.value})\n\n` +
     `__**Opponent's Hand**__\n` +
     `# ${opponentCardsLine.replace('**','').replace('**','')}\n` +
-    `${opponentValueLine}`;
+    `${opponentValueLine}\n\n` +
+    `__**Your Hand**__\n` +
+    `# ${handToEmotes(userHand)}\n` +
+    `(${userHand.value})`;
+
+  // Determine color: green for win, red for loss, yellow for tie, default to client.color
+  let color = client.color;
+  if (result) {
+    if (result.toLowerCase().includes('win')) color = 0x2ecc71; // green
+    else if (result.toLowerCase().includes('lose')) color = 0xe74c3c; // red
+    else if (result.toLowerCase().includes('tie')) color = 0xf1c40f; // yellow
+  }
+
   return new EmbedBuilder()
-    .setColor(client.color)
+    .setColor(color)
     .setTitle('Blackjack Game')
     .setDescription(description)
     .setFooter({ text: isUserTurn ? 'Your turn! Hit or Stand?' : "Opponent's turn..." });
@@ -132,7 +141,7 @@ function createBlackjackButtons(isUserTurn: boolean = true) {
       new ButtonBuilder()
         .setCustomId('user-button-hit')
         .setLabel('Hit')
-        .setStyle(ButtonStyle.Primary)
+        .setStyle(ButtonStyle.Success)
         .setDisabled(!isUserTurn),
       new ButtonBuilder()
         .setCustomId('user-button-stand')
@@ -209,7 +218,7 @@ export default {
         // Check if bust
         if (newUserHand.isBust) {
           // Show final game state with opponent cards revealed
-          const bustEmbed = createBlackjackEmbed(client, newUserHand, opponentHand, false, true);
+          const bustEmbed = createBlackjackEmbed(client, newUserHand, opponentHand, false, true, 'You bust! You lose!');
           const disabledButtons = createBlackjackButtons(false);
           bustEmbed.setFooter({ text: 'BUST! You lose!' });
           await i.update({
@@ -243,7 +252,7 @@ export default {
           // If opponent busts, end game immediately
           if (currentOpponentHand.isBust) {
             const result = determineWinner(userHand, opponentHand);
-            const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true);
+            const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true, result);
             finalEmbed.setFooter({ text: result });
             await i.update({
               embeds: [finalEmbed],
@@ -255,7 +264,7 @@ export default {
         }
         // Determine winner (if not already ended by bust)
         const result = determineWinner(userHand, opponentHand);
-        const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true);
+        const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true, result);
         finalEmbed.setFooter({ text: result });
         await i.update({
           embeds: [finalEmbed],
