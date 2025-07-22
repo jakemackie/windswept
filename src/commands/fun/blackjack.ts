@@ -1,10 +1,6 @@
 import { 
 	SlashCommandBuilder,
 
-	ContainerBuilder,
-
-  TextDisplayBuilder,
-
   // SeparatorBuilder,
   // SeparatorComponent,
   // SeparatorSpacingSize,
@@ -12,8 +8,8 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  MessageFlags,
-  ButtonInteraction
+  ButtonInteraction,
+  EmbedBuilder
 } from 'discord.js';
 
 import type { 
@@ -22,18 +18,46 @@ import type {
 
 import { windswept } from '../../client/windswept.js';
 import { StandardDeck, BlackjackHand } from '../../lib/games/blackjack/index.js';
-import type { Hand } from '../../types/blackjack.js';
+import type { Hand, Card } from '../../types/blackjack.js';
+import emotes from './emotes.js';
 
-// Helper function to create game display
-function createGameDisplay(userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true): string {
-  const opponentDisplay = showOpponentCards 
-    ? `**Opponent's Hand:** \`[${opponentHand.toString()}]\` **(${opponentHand.value})**`
-    : `**Opponent's Hand:** [${opponentHand.cards[0].displayName}, <:windswept_blackjack_z_card:1395299740433911838>] **(?)**`;
-    
-  return `**Blackjack Game**\n\n` +
-         `**Your Hand:** \`[${userHand.toString()}]\` **(${userHand.value})**\n` +
-         `${opponentDisplay}\n\n` +
-         `${isUserTurn ? 'Your turn! Hit or Stand?' : 'Opponent\'s turn...'}`;
+// Helper to get emote for a card
+function getCardEmote(card: Card): string {
+  // Map suit and rank enums to emotes.json keys
+  const suitMap: Record<string, string> = {
+    '♣': 'clubs',
+    '♠': 'spades',
+    '♦': 'diamonds',
+    '♥': 'hearts',
+  };
+  const rankMap: Record<string, string> = {
+    'A': 'ace',
+    '2': 'two',
+    '3': 'three',
+    '4': 'four',
+    '5': 'five',
+    '6': 'six',
+    '7': 'seven',
+    '8': 'eight',
+    '9': 'nine',
+    '10': 'ten',
+    'J': 'jack',
+    'Q': 'queen',
+    'K': 'king',
+  };
+  const suitKey = suitMap[card.suit];
+  const rankKey = rankMap[card.rank];
+  // Only clubs, spades, diamonds are in emotes.json
+  if (suitKey && (emotes as any)[suitKey] && (emotes as any)[suitKey][rankKey]) {
+    return (emotes as any)[suitKey][rankKey];
+  }
+  // fallback for hearts or missing emote
+  return '❓';
+}
+
+// Helper to display a hand as emotes
+function handToEmotes(hand: Hand): string {
+  return hand.cards.map(getCardEmote).join(' ');
 }
 
 // Bot AI logic
@@ -73,29 +97,47 @@ function determineWinner(userHand: Hand, opponentHand: Hand): string {
   return "It's a tie!";
 }
 
-// Helper function to create new container
-function createGameContainer(client: windswept, userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true): ContainerBuilder {
-  const userButtonHit = new ButtonBuilder()
-    .setCustomId('user-button-hit')
-    .setLabel('Hit')
-    .setStyle(ButtonStyle.Primary)
-    .setDisabled(!isUserTurn);
-
-  const userButtonStand = new ButtonBuilder()
-    .setCustomId('user-button-stand')
-    .setLabel('Stand')
-    .setStyle(ButtonStyle.Secondary)
-    .setDisabled(!isUserTurn);
-
-  return new ContainerBuilder()
-    .setAccentColor(client.color)
-    .addTextDisplayComponents(
-      new TextDisplayBuilder()
-        .setContent(createGameDisplay(userHand, opponentHand, isUserTurn, showOpponentCards))
+// Helper to create the blackjack embed
+function createBlackjackEmbed(client: windswept, userHand: Hand, opponentHand: Hand, isUserTurn: boolean = true, showOpponentCards: boolean = true): EmbedBuilder {
+  // Get the first card's value
+  const firstCard = opponentHand.cards[0];
+  const firstCardValue = firstCard ? firstCard.value : '?';
+  return new EmbedBuilder()
+    .setColor(client.color)
+    .setTitle('Blackjack Game')
+    .addFields(
+      {
+        name: 'Your Hand',
+        value: `${handToEmotes(userHand)}\n**(${userHand.value})**`,
+        inline: true
+      },
+      {
+        name: "Opponent's Hand",
+        value: showOpponentCards
+          ? `${handToEmotes(opponentHand)}\n**(${opponentHand.value})**`
+          : `${getCardEmote(firstCard)}, <:windswept_blackjack_z_card:1395299740433911838>\n**(${firstCardValue} + ?)**`,
+        inline: true
+      }
     )
-    .addActionRowComponents(
-      new ActionRowBuilder<ButtonBuilder>().addComponents(userButtonHit, userButtonStand)
-    );
+    .setFooter({ text: isUserTurn ? 'Your turn! Hit or Stand?' : "Opponent's turn..." });
+}
+
+// Helper to create the action row with buttons
+function createBlackjackButtons(isUserTurn: boolean = true) {
+  return [
+    new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId('user-button-hit')
+        .setLabel('Hit')
+        .setStyle(ButtonStyle.Primary)
+        .setDisabled(!isUserTurn),
+      new ButtonBuilder()
+        .setCustomId('user-button-stand')
+        .setLabel('Stand')
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(!isUserTurn)
+    )
+  ];
 }
 
 export default {
@@ -128,15 +170,13 @@ export default {
     let userHand = new BlackjackHand([deck.drawCard()!]);
     let opponentHand = new BlackjackHand([deck.drawCard()!]);
 
-    // Build the initial container
-    const container = createGameContainer(client, userHand, opponentHand, true, false);
+    // Build the initial embed and buttons
+    const embed = createBlackjackEmbed(client, userHand, opponentHand, true, false);
+    const buttons = createBlackjackButtons(true);
 
     const reply = await interaction.reply({
-      components: [container],
-      flags: [
-        MessageFlags.Ephemeral,
-        MessageFlags.IsComponentsV2
-      ]
+      embeds: [embed],
+      components: buttons
     });
 
     // Set up button interaction collector
@@ -166,39 +206,21 @@ export default {
         // Check if bust
         if (newUserHand.isBust) {
           // Show final game state with opponent cards revealed
-          const bustContainer = new ContainerBuilder()
-            .setAccentColor(client.color)
-            .addTextDisplayComponents(
-              new TextDisplayBuilder()
-                .setContent(createGameDisplay(newUserHand, opponentHand, false, true) + '\n\n**BUST! You lose!**')
-            )
-            .addActionRowComponents(
-              new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder()
-                  .setCustomId('user-button-hit')
-                  .setLabel('Hit')
-                  .setStyle(ButtonStyle.Primary)
-                  .setDisabled(true),
-                new ButtonBuilder()
-                  .setCustomId('user-button-stand')
-                  .setLabel('Stand')
-                  .setStyle(ButtonStyle.Secondary)
-                  .setDisabled(true)
-              )
-            );
+          const bustEmbed = createBlackjackEmbed(client, newUserHand, opponentHand, false, true);
+          const disabledButtons = createBlackjackButtons(false);
+          bustEmbed.setFooter({ text: 'BUST! You lose!' });
           await i.update({
-            components: [bustContainer],
-            flags: [MessageFlags.IsComponentsV2]
+            embeds: [bustEmbed],
+            components: disabledButtons
           });
           collector.stop();
           return;
         }
-
         // Update the display
-        const newContainer = createGameContainer(client, newUserHand, opponentHand, true, false);
+        const newEmbed = createBlackjackEmbed(client, newUserHand, opponentHand, true, false);
         await i.update({
-          components: [newContainer],
-          flags: [MessageFlags.IsComponentsV2]
+          embeds: [newEmbed],
+          components: createBlackjackButtons(true)
         });
 
       } else if (i.customId === 'user-button-stand') {
@@ -218,62 +240,23 @@ export default {
           // If opponent busts, end game immediately
           if (currentOpponentHand.isBust) {
             const result = determineWinner(userHand, opponentHand);
-            const finalContainer = new ContainerBuilder()
-              .setAccentColor(client.color)
-              .addTextDisplayComponents(
-                new TextDisplayBuilder()
-                  .setContent(createGameDisplay(userHand, opponentHand, false, true) + `\n\n**${result}**`)
-              )
-              .addActionRowComponents(
-                new ActionRowBuilder<ButtonBuilder>().addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('user-button-hit')
-                    .setLabel('Hit')
-                    .setStyle(ButtonStyle.Primary)
-                    .setDisabled(true),
-                  new ButtonBuilder()
-                    .setCustomId('user-button-stand')
-                    .setLabel('Stand')
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(true)
-                )
-              );
+            const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true);
+            finalEmbed.setFooter({ text: result });
             await i.update({
-              components: [finalContainer],
-              flags: [MessageFlags.IsComponentsV2]
+              embeds: [finalEmbed],
+              components: createBlackjackButtons(false)
             });
             collector.stop();
             return;
           }
         }
-        
         // Determine winner (if not already ended by bust)
         const result = determineWinner(userHand, opponentHand);
-        
-        // Show final game state with all cards revealed
-        const finalContainer = new ContainerBuilder()
-          .setAccentColor(client.color)
-          .addTextDisplayComponents(
-            new TextDisplayBuilder()
-              .setContent(createGameDisplay(userHand, opponentHand, false, true) + `\n\n**${result}**`)
-          )
-          .addActionRowComponents(
-            new ActionRowBuilder<ButtonBuilder>().addComponents(
-              new ButtonBuilder()
-                .setCustomId('user-button-hit')
-                .setLabel('Hit')
-                .setStyle(ButtonStyle.Primary)
-                .setDisabled(true),
-              new ButtonBuilder()
-                .setCustomId('user-button-stand')
-                .setLabel('Stand')
-                .setStyle(ButtonStyle.Secondary)
-                .setDisabled(true)
-            )
-          );
+        const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true);
+        finalEmbed.setFooter({ text: result });
         await i.update({
-          components: [finalContainer],
-          flags: [MessageFlags.IsComponentsV2]
+          embeds: [finalEmbed],
+          components: createBlackjackButtons(false)
         });
         collector.stop();
       }
