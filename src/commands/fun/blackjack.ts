@@ -179,8 +179,20 @@ export default {
     const deck = new StandardDeck();
     
     // Deal initial cards
-    let userHand = new BlackjackHand([deck.drawCard()!]);
-    let opponentHand = new BlackjackHand([deck.drawCard()!]);
+    let userHand = new BlackjackHand([deck.drawCard()!, deck.drawCard()!]);
+    let opponentHand = new BlackjackHand([deck.drawCard()!, deck.drawCard()!]);
+
+    // Check for initial blackjack
+    if (userHand.isBlackjack || opponentHand.isBlackjack) {
+      const result = determineWinner(userHand, opponentHand);
+      const finalEmbed = createBlackjackEmbed(client, userHand, opponentHand, false, true, result);
+      finalEmbed.setFooter({ text: result });
+      await interaction.reply({
+        embeds: [finalEmbed],
+        components: createBlackjackButtons(false)
+      });
+      return;
+    }
 
     // Build the initial embed and buttons
     const embed = createBlackjackEmbed(client, userHand, opponentHand, true, false);
