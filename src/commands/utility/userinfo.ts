@@ -51,7 +51,7 @@ export default {
 
       if (roles.length > 0) {
         fields.push({
-          name: 'Roles',
+          name: `Roles (${roles.length})`,
           value: roles.join(', '),
           inline: false,
         });
