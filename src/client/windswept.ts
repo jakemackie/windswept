@@ -1,11 +1,16 @@
 import { 
-    Client,
-    Collection,
-    GatewayIntentBits
+	Client,
+	Collection,
+	GatewayIntentBits
 } from 'discord.js';
+
+import type { User, GuildMember } from 'discord.js';
 import type { Command } from '../types/Command.js';
+
 import { loadEvents } from '../hooks/event.js';
 import { loadCommands } from '../hooks/command.js';
+import { getAverageColor } from 'fast-average-color-node';
+import { permissionLabels } from '../constants/permissions.js';
 
 export class windswept extends Client {
 	public commands: Collection<string, Command>;
@@ -74,5 +79,31 @@ export class windswept extends Client {
 			default:
 				return { color: 0x0091e2, environment: 'Unknown' };
 		}
+	}
+
+	public async getUserColor(user: User, member?: GuildMember): Promise<number> {
+		const avatarURL = this.getPrimaryUserAvatar(user, member, 64);
+		if (!avatarURL) return this.color;
+
+		try {
+			const color = await getAverageColor(avatarURL);
+			return parseInt(color.hex.replace('#', ''), 16);
+		} catch (err) {
+			return this.color;
+		}
+	}
+
+	// Returns the user's server-specific avatar if available, otherwise returns their global user avatar.
+	public getPrimaryUserAvatar(user: User, member?: GuildMember, size = 512): string {
+    if (member?.avatar) {
+      return member.displayAvatarURL({ size });
+    } else {
+      return user.displayAvatarURL({ size });
+    }
+  }
+
+	// Pretty formats permissions for display
+	public formatPermissions(perms: string[]): string[] {
+  	return perms.map(perm => permissionLabels[perm as keyof typeof permissionLabels] ?? perm);
 	}
 }
