@@ -82,7 +82,7 @@ export default {
         const embed = new EmbedBuilder()
           .setAuthor({
             name: `${previousName} → ${nickname}`,
-            iconURL: interaction.user.displayAvatarURL()
+            iconURL: user.displayAvatarURL()
           })
           .setTitle('Nickname Changed')
           .setDescription(`${interaction.user}: Changed the nickname of ${user} to \`${nickname}\`.`)
