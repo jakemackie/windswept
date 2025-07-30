@@ -1,8 +1,4 @@
 <div align="center">
-    <img src="https://avatars.githubusercontent.com/u/220843018?s=200&v=4" alt="Logo">
-</div>
-
-<div align="center">
   <h3>Windswept</h3>
 </div>
 
@@ -14,4 +10,4 @@
 
 ## Overview
 
-...
+Windswept is a multipurpose Discord bot that makes managing your servers easier with features that boost community engagement.
