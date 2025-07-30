@@ -39,29 +39,45 @@ export default {
         flags: MessageFlags.Ephemeral 
       });
 
-
       const user = interaction.options.getUser('user') ?? interaction.user;
+      const targetMember = interaction.guild.members.cache.get(user.id);
+      const botMember = interaction.guild.members.me;
 
-      // Bot
-      if (!interaction.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
+      if (!targetMember) {
+        return interaction.reply({ 
+          content: 'User not found in this server.', 
+          flags: MessageFlags.Ephemeral 
+        });
+      }
+
+      // Bot permission check
+      if (!botMember?.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
         return interaction.reply({ 
           content: 'I do not have permission to manage nicknames.', 
           flags: MessageFlags.Ephemeral 
         });
       }
 
-      // User
-      if (!interaction.guild.members.cache.get(user.id)?.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
+      // Role hierarchy check
+      if (targetMember.roles.highest.position >= botMember.roles.highest.position) {
         return interaction.reply({ 
-          content: 'You do not have permission to manage nicknames for this user.', 
+          content: 'I cannot change the nickname of this user because they have the same or higher role than me.', 
+          flags: MessageFlags.Ephemeral 
+        });
+      }
+
+      // User permission check
+      if (!interaction.guild.members.cache.get(interaction.user.id)?.permissions.has(PermissionsBitField.Flags.ManageNicknames)) {
+        return interaction.reply({ 
+          content: 'You do not have permission to manage nicknames.', 
           flags: MessageFlags.Ephemeral 
         });
       }
 
       try {
-        const previousName = interaction.guild.members.cache.get(user.id)?.nickname || user.username;
+        const previousName = targetMember.nickname || user.username;
 
-        await interaction.guild.members.cache.get(user.id)?.setNickname(nickname);
+        await targetMember.setNickname(nickname);
 
         const embed = new EmbedBuilder()
           .setAuthor({
