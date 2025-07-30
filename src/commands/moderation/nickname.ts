@@ -72,10 +72,7 @@ export default {
           .setDescription(`${interaction.user}: Changed the nickname of ${user} to \`${nickname}\`.`)
           .setColor(client.color)
 
-        return interaction.reply({ 
-          embeds: [embed],
-          flags: MessageFlags.Ephemeral 
-        });
+        return interaction.reply({ embeds: [embed] });
       } catch (error) {
         console.error(error);
         return interaction.reply({ content: 'There was an error setting the nickname.', flags: MessageFlags.Ephemeral });
