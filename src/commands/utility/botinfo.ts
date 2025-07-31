@@ -61,6 +61,14 @@ export default {
       .setStyle(ButtonStyle.Secondary)
       .setDisabled(true);
 
+    // Top.gg bot promotion button
+    const topgg = new ButtonBuilder()
+      .setEmoji('🗳️')
+      .setLabel(`Upvote (Coming soon)`)
+      .setStyle(ButtonStyle.Link)
+      .setURL(`https://top.gg/bot/${client.user?.id}`)
+      .setDisabled(true);
+
     // GitHub button
     const github = new ButtonBuilder()
       .setEmoji('⭐')
@@ -70,7 +78,7 @@ export default {
 
     // Combine buttons into an Action Row
     const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>()
-      .addComponents(website, github);
+      .addComponents(website, topgg, github);
 
     container.setAccentColor(client.color);
     container.addActionRowComponents(actionRow);
