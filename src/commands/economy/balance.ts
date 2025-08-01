@@ -1,11 +1,9 @@
 import { 
 	SlashCommandBuilder,
-	EmbedBuilder,
 	MessageFlags,
 	type ChatInputCommandInteraction 
 } from 'discord.js';
 
-import { windswept } from '../../client/windswept.js';
 import prisma from '../../lib/prisma.js';
 
 export default {
@@ -15,7 +13,6 @@ export default {
     .setDescription('Check your balance'),
 
 	async execute(interaction: ChatInputCommandInteraction) {
-		const client = interaction.client as windswept;
     const user = interaction.user;
 
     try {
@@ -29,12 +26,7 @@ export default {
     } catch (error) {
       console.error(error);
 
-      const errorEmbed = new EmbedBuilder()
-        .setColor(client.color)
-        .setDescription('Failed to set AFK status. Please try again.');
-
-      await interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: 'Failed to retrieve balance. Please try again.', flags: MessageFlags.Ephemeral });
     }
   },
 };
-  
