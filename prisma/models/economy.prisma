@@ -1,0 +1,9 @@
+model Economy {
+  id                      String    @id @default(uuid())
+  userId                  String    @unique @map("user_id")
+  balance                 Int       @default(0)
+  lastDailyRewardClaimed  DateTime? @map("last_claimed_daily_reward")
+  lastDailyShiftClaimed   DateTime? @map("last_claimed_daily_shift")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+}
