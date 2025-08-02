@@ -6,19 +6,24 @@
   "scripts": {
     "build": "tsc",
     "start": "doppler run -- node dist/index.js",
-    "stop": "docker compose down",
-    "clean": "docker compose down -v",
-    "dev": "npm run db:generate && npm run build && docker compose up -d && node scripts/wait-for-db.js && npm run db:migrate && npm run start",
-    "dev:db": "docker compose up -d",
-    "dev:db:down": "docker compose down",
-    "dev:db:clean": "docker compose down -v",
-    "deploy": "doppler run -- node ./scripts/deploy-commands.js",
+    "compose": "docker compose --file docker/docker-compose.yml",
+    "stop": "npm run compose -- down",
+    "clean": "npm run compose -- down -v",
+    "dev:db": "npm run compose -- up -d",
+    "dev:db:down": "npm run stop",
+    "dev:db:clean": "npm run clean",
+
     "db:migrate": "doppler run -- npx prisma migrate deploy",
     "db:generate": "doppler run -- npx prisma generate",
-    "db:studio": "doppler run -- npx prisma studio"
+    "db:studio": "doppler run -- npx prisma studio",
+
+    "wait-for-db": "node scripts/wait-for-db.js",
+    "deploy": "doppler run -- node ./scripts/deploy-commands.js",
+
+    "dev": "npm run db:generate && npm run build && npm run dev:db && npm run wait-for-db && npm run db:migrate && npm run start"
   },
   "keywords": [],
-  "author": "",
+  "author": "jakemackie",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
