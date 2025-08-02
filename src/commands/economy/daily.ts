@@ -33,14 +33,11 @@ export default {
       // Between 500 and 1000
       const amountToReward = Math.floor(Math.random() * 1000) + 500;
 
-      // Update or create the user's balance and last daily reward claimed time
+      // Update the user's balance and last daily reward claimed time
       await prisma.economy.upsert({
         where: { userId: user.id },
-        create: { userId: user.id, balance: 0 },
-        update: { 
-          balance: { increment: amountToReward },
-          lastDailyRewardClaimed: new Date() 
-        }
+        create: { userId: user.id, balance: amountToReward, lastDailyRewardClaimed: new Date() },
+        update: { balance: { increment: amountToReward }, lastDailyRewardClaimed: new Date() }
       });
 
       await interaction.reply(`Claimed your daily reward of **${amountToReward}** coins!`);

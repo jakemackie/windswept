@@ -26,7 +26,10 @@ export default {
     } catch (error) {
       console.error(error);
 
-      await interaction.reply({ content: 'Failed to retrieve balance. Please try again.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ 
+        content: 'Failed to retrieve balance. Please try again.', 
+        flags: MessageFlags.Ephemeral 
+      });
     }
-  },
+  }
 };
