@@ -22,7 +22,7 @@ export default {
         update: { balance: { increment: 0 } }
       });
 
-      await interaction.reply(`Your balance is: ${economyData.balance}`);
+      await interaction.reply(`Your balance is **${economyData.balance}**`);
     } catch (error) {
       console.error(error);
 
