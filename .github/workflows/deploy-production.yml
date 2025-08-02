@@ -1,4 +1,4 @@
-name: Deploy Bot (Production)
+name: Production Deployment
 
 on:
   push:
@@ -14,16 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up SSH
+      - name: Set up SSH and .env
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Create .env file
-        run: |
-          cat > ./.env << EOF
+          cat > .env <<EOF
           DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -57,30 +55,15 @@ jobs:
       - name: Build Typescript
         run: npm run build
 
-      - name: Rsync to VPS
+      - name: Sync + Migrate + Restart on VPS
         run: |
           rsync -avz \
             --exclude='.git' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
-        
-      - name: Prisma Migrate Deploy
-        run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "cd /home/windswept && npx prisma migrate deploy"
 
-      - name: Restart Ubuntu Service
-        run: |
-          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} "sudo systemctl restart windswept.service"
-
-      - name: Notify Discord
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-              -X POST \
-              -d "$(jq -n \
-                --arg title "💨 Production Deployment" \
-                --arg desc "**> [See changes](https://github.com/${{ github.repository }}/commit/${{ github.sha }})**" \
-                --argjson color 37346 \
-                '{embeds: [{title: $title, description: $desc, color: $color}]}' \
-              )" \
-              ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} <<'EOF'
+          cd /home/windswept
+          npx prisma migrate deploy
+          sudo systemctl restart windswept.service
+          EOF
