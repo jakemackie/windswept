@@ -1,13 +1,12 @@
-import { SlashCommandBuilder, EmbedBuilder, MessageFlags, PermissionsBitField, type GuildTextBasedChannel } from 'discord.js';
+import { EmbedBuilder, MessageFlags, PermissionsBitField, type GuildTextBasedChannel } from 'discord.js';
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { windswept } from '../../client/windswept.js';
+import { windswept } from '../../../client/windswept.js';
 
 export default {
-  name: 'firstmessage',
-  data: new SlashCommandBuilder()
-    .setName('firstmessage')
-    .setDescription('Shows the first message in this server.'),
-
+  data: {
+    name: 'firstmessage',
+    description: 'Shows the first message in this server.'
+  },
   async execute(interaction: ChatInputCommandInteraction) {
     // Resolve the client & interaction user
     const client = interaction.client as windswept;
