@@ -1,8 +1,10 @@
 import { REST, Routes } from 'discord.js';
 import { config } from 'dotenv';
-import fs from 'fs';
 import path from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { fileURLToPath } from 'url';
+import { getAllCommandFiles } from '../dist/utils/getAllCommandFiles.js';
+import { importCommands } from '../dist/utils/importCommands.js';
+import { filterTopLevelCommands } from '../dist/utils/filterTopLevelCommands.js';
 
 config();
 
@@ -17,39 +19,33 @@ if (!token || !clientId || !guildId) {
   throw new Error('Missing DISCORD_TOKEN, DISCORD_CLIENT_ID, or TEST_GUILD_ID in environment.');
 }
 
-const commands = [];
-const commandsPath = path.join(__dirname, '../dist/commands');
-const commandFolders = fs.readdirSync(commandsPath);
-
-for (const folder of commandFolders) {
-  const folderPath = path.join(commandsPath, folder);
-  const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
-
-  for (const file of commandFiles) {
-    const filePath = path.join(folderPath, file);
-    const commandModule = await import(pathToFileURL(filePath).href);
-    const command = commandModule.default;
-    if (command && command.data) {
-      commands.push(command.data.toJSON());
-    }
-  }
-}
-
-const rest = new REST({ version: '10' }).setToken(token);
-
 (async () => {
+  const commandsPath = path.join(__dirname, '../dist/commands');
+
+  const allCommandFiles = getAllCommandFiles(commandsPath);
+
+  const topLevelCommandFiles = filterTopLevelCommands(allCommandFiles, commandsPath);
+
+  const commands = await importCommands(topLevelCommandFiles);
+
+  const commandsData = commands.map(cmd =>
+    typeof cmd.data.toJSON === 'function' ? cmd.data.toJSON() : cmd.data
+  );
+
+  const rest = new REST({ version: '10' }).setToken(token);
+
   try {
     console.log('Deleting all existing application (/) commands...');
     await rest.put(
       Routes.applicationGuildCommands(clientId, guildId),
-      { body: [] },
+      { body: [] }
     );
     console.log('Successfully deleted all existing commands.');
 
-    console.log(`Started refreshing ${commands.length} application (/) commands for guild ${guildId}.`);
+    console.log(`Started refreshing ${commandsData.length} application (/) commands for guild ${guildId}.`);
     await rest.put(
       Routes.applicationGuildCommands(clientId, guildId),
-      { body: commands },
+      { body: commandsData }
     );
     console.log('Successfully reloaded guild application (/) commands.');
   } catch (error) {
