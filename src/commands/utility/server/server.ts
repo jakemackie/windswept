@@ -4,6 +4,7 @@ import {
   type ChatInputCommandInteraction
 } from 'discord.js';
 import avatar from './serverAvatar.js';
+import serverBanner from './serverBanner.js';
 import firstmessage from './serverFirstMessage.js';
 
 export default {
@@ -13,6 +14,10 @@ export default {
     .addSubcommand(sub =>
       sub.setName(avatar.data.name)
         .setDescription(avatar.data.description)
+    )
+    .addSubcommand(sub =>
+      sub.setName(serverBanner.data.name)
+        .setDescription(serverBanner.data.description)
     )
     .addSubcommand(sub =>
       sub.setName(firstmessage.data.name)
@@ -25,6 +30,8 @@ export default {
     switch (sub) {
       case 'avatar':
         return avatar.execute(interaction);
+      case 'banner':
+        return serverBanner.execute(interaction);
       case 'firstmessage':
         return firstmessage.execute(interaction);
     }
