@@ -3,8 +3,11 @@ import {
   MessageFlags,
   type ChatInputCommandInteraction
 } from 'discord.js';
-import avatar from './serverAvatar.js';
-import firstmessage from './serverFirstMessage.js';
+
+import serverAvatar from './serverAvatar.js';
+import serverBanner from './serverBanner.js';
+import serverFirstMessage from './serverFirstMessage.js';
+import serverMembers from './serverMembers.js';
 import serverSplash from './serverSplash.js';
 
 export default {
@@ -12,12 +15,20 @@ export default {
     .setName('server')
     .setDescription('Server utility commands')
     .addSubcommand(sub =>
-      sub.setName(avatar.data.name)
-        .setDescription(avatar.data.description)
+      sub.setName(serverAvatar.data.name)
+        .setDescription(serverAvatar.data.description)
     )
     .addSubcommand(sub =>
-      sub.setName(firstmessage.data.name)
-        .setDescription(firstmessage.data.description)
+      sub.setName(serverBanner.data.name)
+        .setDescription(serverBanner.data.description)
+    )
+    .addSubcommand(sub =>
+      sub.setName(serverFirstMessage.data.name)
+        .setDescription(serverFirstMessage.data.description)
+    )
+    .addSubcommand(sub =>
+      sub.setName(serverMembers.data.name)
+        .setDescription(serverMembers.data.description)
     )
     .addSubcommand(sub =>
       sub.setName(serverSplash.data.name)
@@ -29,9 +40,13 @@ export default {
 
     switch (sub) {
       case 'avatar':
-        return avatar.execute(interaction);
+        return serverAvatar.execute(interaction);
+      case 'banner':
+        return serverBanner.execute(interaction);
       case 'firstmessage':
-        return firstmessage.execute(interaction);
+        return serverFirstMessage.execute(interaction);
+      case 'members':
+        return serverMembers.execute(interaction);
       case 'splash':
         return serverSplash.execute(interaction);
     }
