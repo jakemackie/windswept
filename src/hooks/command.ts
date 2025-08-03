@@ -1,30 +1,32 @@
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { windswept } from '../client/windswept.js';
-import { pathToFileURL } from 'url';
+import { getAllCommandFiles } from '../utils/getAllCommandFiles.js';
+import { filterTopLevelCommands } from '../utils/filterTopLevelCommands.js';
+import { importCommands } from '../utils/importCommands.js';
+import { logCommand } from '../utils/logCommand.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const loadCommands = async (client: windswept) => {
-	const foldersPath = path.join(__dirname, '..', 'commands');
-	const commandFolders = fs.readdirSync(foldersPath);
+  const commandsPath = path.join(__dirname, '..', 'commands');
+  const allCommandFiles = getAllCommandFiles(commandsPath);
+  const commandFiles = filterTopLevelCommands(allCommandFiles, commandsPath);  
+  
+  try {
+    const commands = await importCommands(commandFiles);
 
-	for (const folder of commandFolders) {
-		const commandsPath = path.join(foldersPath, folder);
-		const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
-
-		for (const file of commandFiles) {
-			const filePath = path.join(commandsPath, file);
-			const command = (await import(pathToFileURL(filePath).href)).default;
-
-			if ('data' in command && 'execute' in command) {
-				client.commands.set(command.data.name, command);
-				console.log(`Loaded command: ${command.data.name}`);
-			} else {
-				console.error(`${filePath} is missing a required "data" or "execute" property.`);
-			}
-		}
-	}
+    for (let i = 0; i < commands.length; i++) {
+      const command = commands[i];
+      try {
+        client.commands.set(command.data.name, command);
+        logCommand(command);
+      } catch (error) {
+        console.error(`Error loading command ${command?.data?.name || 'unknown'}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error('Error importing commands:', error);
+  }
 };
