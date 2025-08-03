@@ -6,9 +6,10 @@
   "scripts": {
     "build": "tsc",
     "start": "doppler run -- node dist/index.js",
-    "compose": "docker compose --file docker/docker-compose.yml",
+    "compose": "docker compose -p windswept --file docker/docker-compose.yml",
     "stop": "npm run compose -- down",
     "clean": "npm run compose -- down -v",
+    
     "dev:db": "npm run compose -- up -d",
     "dev:db:down": "npm run stop",
     "dev:db:clean": "npm run clean",
