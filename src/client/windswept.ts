@@ -4,7 +4,7 @@ import {
 	GatewayIntentBits
 } from 'discord.js';
 
-import type { User, GuildMember } from 'discord.js';
+import type { User, GuildMember, Guild } from 'discord.js';
 import type { Command } from '../types/Command.js';
 
 import { loadEvents } from '../hooks/event.js';
@@ -81,6 +81,15 @@ export class windswept extends Client {
 		}
 	}
 
+	// Returns the user's server-specific avatar if available, otherwise returns their global user avatar.
+	public getPrimaryUserAvatar(user: User, member?: GuildMember, size = 512): string {
+    if (member?.avatar) {
+      return member.displayAvatarURL({ size });
+    } else {
+      return user.displayAvatarURL({ size });
+    }
+  }
+
 	public async getUserColor(user: User, member?: GuildMember): Promise<number> {
 		const avatarURL = this.getPrimaryUserAvatar(user, member, 64);
 		if (!avatarURL) return this.color;
@@ -93,14 +102,17 @@ export class windswept extends Client {
 		}
 	}
 
-	// Returns the user's server-specific avatar if available, otherwise returns their global user avatar.
-	public getPrimaryUserAvatar(user: User, member?: GuildMember, size = 512): string {
-    if (member?.avatar) {
-      return member.displayAvatarURL({ size });
-    } else {
-      return user.displayAvatarURL({ size });
-    }
-  }
+	public async getGuildColor(guild: Guild): Promise<number> {
+		const iconUrl = guild.iconURL();
+		if (!iconUrl) return this.color;
+
+		try {
+			const color = await getAverageColor(iconUrl);
+			return parseInt(color.hex.replace('#', ''), 16);
+		} catch (err) {
+			return this.color;
+		}
+	}
 
 	// Pretty formats permissions for display
 	public formatPermissions(perms: string[]): string[] {
