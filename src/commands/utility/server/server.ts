@@ -5,6 +5,7 @@ import {
 } from 'discord.js';
 import avatar from './serverAvatar.js';
 import firstmessage from './serverFirstMessage.js';
+import members from './serverMembers.js';
 
 export default {
   data: new SlashCommandBuilder()
@@ -17,6 +18,10 @@ export default {
     .addSubcommand(sub =>
       sub.setName(firstmessage.data.name)
         .setDescription(firstmessage.data.description)
+    )
+    .addSubcommand(sub =>
+      sub.setName(members.data.name)
+        .setDescription(members.data.description)
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -27,6 +32,8 @@ export default {
         return avatar.execute(interaction);
       case 'firstmessage':
         return firstmessage.execute(interaction);
+      case 'members':
+        return members.execute(interaction);
     }
 
     return interaction.reply({ 
