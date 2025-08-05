@@ -12,6 +12,29 @@ export default {
     if(!client.user) return;
     console.log(`${client.user.displayName} ready`);
 
-    client.user.setActivity(`${client.environment}`, { type: ActivityType.Listening });
+    const statuses = [
+      { 
+        type: ActivityType.Watching, 
+        text: '.gg/windswept' 
+      },
+      { 
+        type: ActivityType.Playing, 
+        text: 'with the wind' 
+      },
+      { 
+        type: ActivityType.Listening, 
+        text: 'to the breeze' 
+      }
+    ];
+
+    let i = 0;
+    setInterval(() => {
+      if (!client.user) return;
+
+      client.user.setActivity(statuses[i % statuses.length].text, {
+        type: statuses[i % statuses.length].type,
+      });
+      i++;
+    }, 10000); // 10s
   },
 };
