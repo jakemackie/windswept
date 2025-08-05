@@ -56,7 +56,10 @@ Windswept is a multipurpose Discord bot that makes managing your servers easier 
 - Create a Workspace (free for personal use)
 - Configure your environment(s) to use these variables names (unless you'd like to change them):
   - ```
-    a
+    DATABASE_URL
+    DISCORD_CLIENT_ID
+    DISCORD_TOKEN
+    TEST_GUILD_ID
     ```
 - Follow the Doppler CLI docs to install Doppler onto your machine.
 - Login to your account.
