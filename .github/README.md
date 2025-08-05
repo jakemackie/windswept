@@ -55,11 +55,12 @@ Windswept is a multipurpose Discord bot that makes managing your servers easier 
 - Create an account on https://doppler.com/
 - Create a Workspace (free for personal use)
 - Configure your environment(s) to use these variables names (unless you'd like to change them):
-  - ```
-    DATABASE_URL
-    DISCORD_CLIENT_ID
-    DISCORD_TOKEN
-    TEST_GUILD_ID
+  - > You'll want to use this for your Database URL when developing locally as it's based on the [Docker Compose](https://github.com/windswept-bot/windswept/blob/fded13b81945709f3c6bfd93a7356df4c575ce81/docker/docker-compose.yml) file.
+    ```
+    DATABASE_URL=postgresql://windswept:windswept@localhost:5432/windswept?schema=public
+    DISCORD_CLIENT_ID=YOUR_BOT_CLIENT_ID
+    DISCORD_TOKEN=YOUR_BOT_TOKEN
+    TEST_GUILD_ID=YOUR_TEST_GUILD_ID
     ```
 - Follow the Doppler CLI docs to install Doppler onto your machine.
 - Login to your account.
