@@ -83,12 +83,12 @@ export class windswept extends Client {
 
 	// Returns the user's server-specific avatar if available, otherwise returns their global user avatar.
 	public getPrimaryUserAvatar(user: User, member?: GuildMember, size = 512): string {
-    if (member?.avatar) {
-      return member.displayAvatarURL({ size });
-    } else {
-      return user.displayAvatarURL({ size });
-    }
-  }
+		if (member?.avatar) {
+			return member.displayAvatarURL({ size });
+		} else {
+			return user.displayAvatarURL({ size });
+		}
+	}
 
 	public async getUserColor(user: User, member?: GuildMember): Promise<number> {
 		const avatarURL = this.getPrimaryUserAvatar(user, member, 64);
@@ -116,6 +116,6 @@ export class windswept extends Client {
 
 	// Pretty formats permissions for display
 	public formatPermissions(perms: string[]): string[] {
-  	return perms.map(perm => permissionLabels[perm as keyof typeof permissionLabels] ?? perm);
+		return perms.map(perm => permissionLabels[perm as keyof typeof permissionLabels] ?? perm);
 	}
 }
