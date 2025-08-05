@@ -89,7 +89,7 @@ export default {
       .setTitle(user.username)
       .setThumbnail(client.getPrimaryUserAvatar(user, member))
       .addFields(fields)
-      .setFooter({ text: `ID: ${user.id}` })
+      .setFooter({ text: `User ID: ${user.id}` })
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
