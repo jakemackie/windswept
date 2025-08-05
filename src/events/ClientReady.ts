@@ -23,7 +23,7 @@ export default {
       },
       { 
         type: ActivityType.Listening, 
-        text: 'to the breeze' 
+        text: 'the breeze' 
       }
     ];
 
