@@ -7,6 +7,7 @@ import {
 import serverAvatar from './serverAvatar.js';
 import serverBanner from './serverBanner.js';
 import serverFirstMessage from './serverFirstMessage.js';
+import serverInfo from './serverInfo.js';
 import serverMembers from './serverMembers.js';
 import serverSplash from './serverSplash.js';
 
@@ -27,6 +28,10 @@ export default {
         .setDescription(serverFirstMessage.data.description)
     )
     .addSubcommand(sub =>
+      sub.setName(serverInfo.data.name)
+        .setDescription(serverInfo.data.description)
+    )
+    .addSubcommand(sub =>
       sub.setName(serverMembers.data.name)
         .setDescription(serverMembers.data.description)
     )
@@ -45,6 +50,8 @@ export default {
         return serverBanner.execute(interaction);
       case 'firstmessage':
         return serverFirstMessage.execute(interaction);
+      case 'info':
+        return serverInfo.execute(interaction);
       case 'members':
         return serverMembers.execute(interaction);
       case 'splash':
