@@ -9,7 +9,7 @@ import type {
 } from 'discord.js';
 
 import { windswept } from '../../client/windswept.js';
-import prisma from '../../lib/prisma.js';
+import db from '../../database/db.js';
 
 export default {
 	name: 'afk',
@@ -33,7 +33,7 @@ export default {
 			.setDescription(`:dash: ${user}: You're now AFK${reason ? `: **${reason}**` : ''}`);
 
     try {
-      await prisma.afk.upsert({
+      await db.afk.upsert({
         where: { userId: user.id },
         create: { userId: user.id, reason },
         update: { reason }

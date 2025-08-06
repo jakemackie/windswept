@@ -4,7 +4,7 @@ import {
 	type ChatInputCommandInteraction 
 } from 'discord.js';
 
-import prisma from '../../lib/prisma.js';
+import db from '../../database/db.js';
 
 export default {
 	name: 'daily',
@@ -16,7 +16,7 @@ export default {
     const user = interaction.user;
 
     try {
-      const userEconomy = await prisma.economy.findUnique({
+      const userEconomy = await db.economy.findUnique({
         where: { userId: user.id }
       });
 
@@ -34,7 +34,7 @@ export default {
       const amountToReward = Math.floor(Math.random() * 1000) + 500;
 
       // Update the user's balance and last daily reward claimed time
-      await prisma.economy.upsert({
+      await db.economy.upsert({
         where: { userId: user.id },
         create: { userId: user.id, balance: amountToReward, lastDailyRewardClaimed: new Date() },
         update: { balance: { increment: amountToReward }, lastDailyRewardClaimed: new Date() }

@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 import type { windswept } from '../client/windswept.js';
-import prisma from '../lib/prisma.js';
+import db from '../database/db.js';
 
 export default {
   name: Events.MessageCreate,
@@ -14,7 +14,7 @@ export default {
     if (message.author.bot || !message) return;
 
     // Check if the user is marked as AFK
-    const afk = await prisma.afk.findUnique({ where: { userId: message.author.id } });
+    const afk = await db.afk.findUnique({ where: { userId: message.author.id } });
 
     if (afk) {
       const client = message.client as windswept;
@@ -58,14 +58,14 @@ export default {
       });
 
       // Remove AFK status
-      await prisma.afk.delete({ where: { userId: message.author.id } });
+      await db.afk.delete({ where: { userId: message.author.id } });
     }
 
     if (message.mentions.users.size > 0) {
       for (const [, user] of message.mentions.users) {
         if (user.bot) continue;
 
-        const mentionedAfk = await prisma.afk.findUnique({ where: { userId: user.id } });
+        const mentionedAfk = await db.afk.findUnique({ where: { userId: user.id } });
 
         if (mentionedAfk) {
           const afkSince = new Date(mentionedAfk.updatedAt);
