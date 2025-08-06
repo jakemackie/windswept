@@ -4,12 +4,12 @@ import {
   type ChatInputCommandInteraction
 } from 'discord.js';
 
-import serverAvatar from './serverAvatar.js';
-import serverBanner from './serverBanner.js';
-import serverFirstMessage from './serverFirstMessage.js';
-import serverInfo from './serverInfo.js';
-import serverMembers from './serverMembers.js';
-import serverSplash from './serverSplash.js';
+import serverAvatar from '@/commands/utility/server/serverAvatar';
+import serverBanner from '@/commands/utility/server/serverBanner';
+import serverFirstMessage from '@/commands/utility/server/serverFirstMessage';
+import serverInfo from '@/commands/utility/server/serverInfo';
+import serverMembers from '@/commands/utility/server/serverMembers';
+import serverSplash from '@/commands/utility/server/serverSplash';
 
 export default {
   data: new SlashCommandBuilder()

@@ -1,5 +1,5 @@
 import { pathToFileURL } from 'url';
-import type { Command } from '../types/Command.js';
+import type { Command } from '@/types/Command';
 
 export const importCommands = async (filePaths: string[]): Promise<Command[]> => {
   const commands: Command[] = [];
