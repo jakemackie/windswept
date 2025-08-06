@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { windswept } from './client/windswept.js';
+import { windswept } from '@/client/windswept';
 
 config();
 

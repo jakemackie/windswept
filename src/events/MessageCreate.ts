@@ -1,11 +1,11 @@
 import {
   Events,
   EmbedBuilder,
-  type Message, 
+  type Message 
 } from 'discord.js';
 
-import type { windswept } from '../client/windswept.js';
-import db from '../database/db.js';
+import type { windswept } from '@/client/windswept';
+import db from '@/database/db';
 
 export default {
   name: Events.MessageCreate,

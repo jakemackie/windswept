@@ -5,12 +5,12 @@ import {
 } from 'discord.js';
 
 import type { User, GuildMember, Guild } from 'discord.js';
-import type { Command } from '../types/Command.js';
+import type { Command } from '@/types/Command';
 
-import { loadEvents } from '../hooks/event.js';
-import { loadCommands } from '../hooks/command.js';
+import { loadEvents } from '@/hooks/event';
+import { loadCommands } from '@/hooks/command';
 import { getAverageColor } from 'fast-average-color-node';
-import { permissionLabels } from '../constants/permissions.js';
+import { permissionLabels } from '@/constants/permissions';
 
 export class windswept extends Client {
 	public commands: Collection<string, Command>;

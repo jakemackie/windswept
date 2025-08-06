@@ -10,10 +10,11 @@ import {
   ButtonStyle,
   ActionRowBuilder,
   MessageFlags,
-  type MessageActionRowComponentBuilder
+  type MessageActionRowComponentBuilder,
+  type CommandInteraction
 } from 'discord.js';
-import type { CommandInteraction } from 'discord.js';
-import { windswept } from '../../client/windswept.js';
+
+import { windswept } from '@/client/windswept';
 
 export default {
   name: 'botinfo',

@@ -6,7 +6,7 @@ import {
   type ChatInputCommandInteraction
 } from 'discord.js';
 
-import { windswept } from '../../client/windswept.js';
+import { windswept } from '@/client/windswept';
 
 export default {
   name: 'nickname',

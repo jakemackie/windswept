@@ -45,13 +45,16 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --omit=dev
+        run: npm ci
 
       - name: Generate Prisma Client
         run: npx prisma generate
 
       - name: Build Typescript
         run: npm run build
+
+      - name: Clean dev dependencies for production
+        run: npm prune --omit=dev
 
       - name: Sync + Migrate + Restart on VPS
         run: |

@@ -2,9 +2,9 @@ import {
   ContainerBuilder,
   MediaGalleryBuilder,
   MediaGalleryItemBuilder,
-  MessageFlags
+  MessageFlags,
+  type ChatInputCommandInteraction
 } from 'discord.js';
-import type { ChatInputCommandInteraction } from 'discord.js';
 
 export default {
   data: {

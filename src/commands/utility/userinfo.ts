@@ -6,7 +6,7 @@ import {
 
 import type { APIEmbedField } from 'discord-api-types/v10';
 
-import { windswept } from '../../client/windswept';
+import { windswept } from '@/client/windswept';
 
 export default {
   name: 'userinfo',

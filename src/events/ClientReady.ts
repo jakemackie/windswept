@@ -3,7 +3,7 @@ import {
   ActivityType
 } from 'discord.js';
 
-import type { windswept } from '../client/windswept.js';
+import type { windswept } from '@/client/windswept';
 
 export default {
   name: Events.ClientReady,
