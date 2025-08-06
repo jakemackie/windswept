@@ -4,7 +4,7 @@ import {
 	type ChatInputCommandInteraction 
 } from 'discord.js';
 
-import prisma from '../../lib/prisma.js';
+import db from '../../database/db.js';
 
 export default {
 	name: 'balance',
@@ -16,7 +16,7 @@ export default {
     const user = interaction.user;
 
     try {
-      const economyData = await prisma.economy.upsert({
+      const economyData = await db.economy.upsert({
         where: { userId: user.id },
         create: { userId: user.id, balance: 0 },
         update: { balance: { increment: 0 } }
