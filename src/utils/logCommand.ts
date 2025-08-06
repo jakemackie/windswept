@@ -1,4 +1,4 @@
-import type { Command } from "../types/Command.js";
+import type { Command } from "@/types/Command";
 
 export const logCommand = (command: Command): void => {
   try {

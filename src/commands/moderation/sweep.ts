@@ -3,16 +3,13 @@ import {
   EmbedBuilder,
   MessageFlags,
   PermissionsBitField,
+  type ChatInputCommandInteraction,
+  type Collection,
+  type Message,
+  type PartialMessage
 } from 'discord.js';
 
-import type {
-  ChatInputCommandInteraction,
-  Collection,
-  Message,
-  PartialMessage,
-} from 'discord.js';
-
-import { windswept } from '../../client/windswept.js';
+import { windswept } from '@/client/windswept';
 
 export default {
   name: 'sweep',

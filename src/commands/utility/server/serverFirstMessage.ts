@@ -1,6 +1,12 @@
-import { EmbedBuilder, MessageFlags, PermissionsBitField, type GuildTextBasedChannel } from 'discord.js';
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { windswept } from '../../../client/windswept.js';
+import { 
+  EmbedBuilder, 
+  MessageFlags, 
+  PermissionsBitField, 
+  type GuildTextBasedChannel,
+  type ChatInputCommandInteraction
+} from 'discord.js';
+
+import { windswept } from '@/client/windswept';
 
 export default {
   data: {

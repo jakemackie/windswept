@@ -4,7 +4,7 @@ import {
   type ChatInputCommandInteraction
 } from 'discord.js';
 
-import { windswept } from '../../../client/windswept';
+import { windswept } from '@/client/windswept';
 
 export default {
   data: {

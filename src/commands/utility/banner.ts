@@ -1,22 +1,22 @@
 import { 
-    SlashCommandBuilder,
-    ContainerBuilder,
-    MediaGalleryBuilder,
-    MediaGalleryItemBuilder,
-    MessageFlags
+  SlashCommandBuilder,
+  ContainerBuilder,
+  MediaGalleryBuilder,
+  MediaGalleryItemBuilder,
+  MessageFlags,
+  type ChatInputCommandInteraction
 } from 'discord.js';
-import type { ChatInputCommandInteraction } from 'discord.js';
-  
+
 export default {
   name: 'banner',
   data: new SlashCommandBuilder()
-  .setName('banner')
-  .setDescription('Fetch the banner of the specified user, defaults to self')
-  .addUserOption(option => option
-    .setName('user')
-    .setDescription('The user to fetch the banner of')
-    .setRequired(false)
-  ),
+    .setName('banner')
+    .setDescription('Fetch the banner of the specified user, defaults to self')
+    .addUserOption(option => option
+      .setName('user')
+      .setDescription('The user to fetch the banner of')
+      .setRequired(false)
+    ),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser('user') || interaction.user;

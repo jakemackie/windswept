@@ -1,15 +1,12 @@
 import { 
 	SlashCommandBuilder,
 	EmbedBuilder,
-	MessageFlags
+	MessageFlags,
+  type ChatInputCommandInteraction
 } from 'discord.js';
 
-import type { 
-	ChatInputCommandInteraction
-} from 'discord.js';
-
-import { windswept } from '../../client/windswept.js';
-import db from '../../database/db.js';
+import { windswept } from '@/client/windswept';
+import db from '@/database/db';
 
 export default {
 	name: 'afk',

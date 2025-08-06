@@ -1,10 +1,10 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { windswept } from '../client/windswept.js';
-import { getAllCommandFiles } from '../utils/getAllCommandFiles.js';
-import { filterTopLevelCommands } from '../utils/filterTopLevelCommands.js';
-import { importCommands } from '../utils/importCommands.js';
-import { logCommand } from '../utils/logCommand.js';
+import { windswept } from '@/client/windswept';
+import { getAllCommandFiles } from '@/utils/getAllCommandFiles';
+import { filterTopLevelCommands } from '@/utils/filterTopLevelCommands';
+import { importCommands } from '@/utils/importCommands';
+import { logCommand } from '@/utils/logCommand';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -4,7 +4,7 @@ import {
 	type ChatInputCommandInteraction 
 } from 'discord.js';
 
-import db from '../../database/db.js';
+import db from '@/database/db';
 
 export default {
 	name: 'daily',
