@@ -29,42 +29,17 @@ jobs:
           DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.POSTGRES_DB }}?schema=public
           EOF
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.12.0'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
-      - name: Build Typescript
-        run: npm run build
-
-      - name: Clean dev dependencies for production
-        run: npm prune --omit=dev
-
-      - name: Sync + Migrate + Restart on VPS
+      - name: Sync project to VPS
         run: |
           rsync -avz \
             --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='dist' \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./ root@${{ secrets.SSH_HOST }}:/home/windswept/
 
+      - name: Restart service on VPS
+        run: |
           ssh -i ~/.ssh/id_rsa root@${{ secrets.SSH_HOST }} <<'EOF'
-          cd /home/windswept
-          npx prisma migrate deploy
           sudo systemctl restart windswept.service
           EOF
