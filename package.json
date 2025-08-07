@@ -38,6 +38,7 @@
     "discord.js": "^14.21.0",
     "dotenv": "^17.2.1",
     "fast-average-color-node": "^3.1.0",
-    "robo.js": "^0.10.30"
+    "robo.js": "^0.10.30",
+    "@swc/core": "^1.13.3"
   }
 }
