@@ -1,7 +1,11 @@
-import { config } from 'dotenv';
+import "dotenv/config";
+import { Robo } from 'robo.js';
 import { windswept } from '@/client/windswept';
 
-config();
-
 const client = new windswept();
-await client.init();
+
+client.on('messageCreate', (message) => {
+	console.log(message.content)
+});
+
+Robo.start({ client });
