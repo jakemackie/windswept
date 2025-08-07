@@ -12,5 +12,5 @@ export default <Config>{
   },
   type: 'robo',
   plugins: [],
-  commands: ["src/commands"],
+  commands: ['src/commands'],
 }
