@@ -3,8 +3,9 @@ import {
   type Message 
 } from 'discord.js';
 
-import type { windswept } from '@/client/windswept';
-import db from '@/database/db';
+import { client } from "robo.js";
+
+import db from '@/database/db.js';
 
 export default async (message: Message) => {
   // Ignore bots and DMs
@@ -14,8 +15,6 @@ export default async (message: Message) => {
   const afk = await db.afk.findUnique({ where: { userId: message.author.id } });
 
   if (afk) {
-    const client = message.client as windswept;
-
     // Calculate how long the user was AFK
     const afkSince = new Date(afk.updatedAt);
     const currentTime = new Date();
@@ -47,7 +46,6 @@ export default async (message: Message) => {
     await message.reply({
       embeds: [
         new EmbedBuilder()
-          .setColor(client.color)
           .setDescription(
             `:wave: ${message.author}: Welcome back, you were away for **${duration}**`
           ),
@@ -71,7 +69,6 @@ export default async (message: Message) => {
         await message.reply({
           embeds: [
             new EmbedBuilder()
-              .setColor((message.client as windswept).color)
               .setDescription(
                 `:zzz: ${user} is AFK${mentionedAfk.reason ? `: **${mentionedAfk.reason}**` : ''} - ${afkSinceTimestamp}`
               ),

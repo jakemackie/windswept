@@ -19,7 +19,7 @@
     "db:studio": "doppler run -- npx prisma studio",
     "wait-for-db": "node ./.config/scripts/wait-for-db.js",
     "deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
-    "dev": "npm run db:generate && npm run build && npm run dev:db && npm run wait-for-db && npm run db:migrate && npm run start",
+    "dev": "npm run db:generate && doppler run -- robo dev",
     "start:dev": "node dist/index.js"
   },
   "keywords": [],
