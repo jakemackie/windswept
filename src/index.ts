@@ -1,11 +1,14 @@
-import "dotenv/config";
-import { Robo } from 'robo.js';
+import { config } from 'dotenv';
 import { windswept } from '@/client/windswept';
+import { Client } from 'discord.js'
+import { Robo } from 'robo.js'
+
+config();
+
+
+const discordClient = new Client();
+Robo.start({ client: discordClient })
+
 
 const client = new windswept();
-
-client.on('messageCreate', (message) => {
-	console.log(message.content)
-});
-
-Robo.start({ client });
+await client.init();
