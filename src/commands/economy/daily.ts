@@ -21,13 +21,22 @@ export default async (interaction: ChatInputCommandInteraction): Promise<Command
       where: { userId: user.id }
     });
 
+    if (!userEconomy) {
+      interaction.reply({
+        content: 'Unable to fetch your balance. Please try again later.',
+        flags: MessageFlags.Ephemeral
+      });
+      return;
+    }
+
     // Check if the user has already claimed their daily reward
-    if (userEconomy && userEconomy.lastDailyRewardClaimed) {
+    if (userEconomy?.lastDailyRewardClaimed) {
       const lastClaimed = new Date(userEconomy.lastDailyRewardClaimed);
       const now = new Date();
 
       if (now.getTime() - lastClaimed.getTime() < 24 * 60 * 60 * 1000) {
         interaction.reply(`You've already claimed your daily reward. You can claim again <t:${Math.floor((lastClaimed.getTime() + 24 * 60 * 60 * 1000) / 1000)}:R>.`);
+        return;
       }
     }
 

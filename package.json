@@ -20,13 +20,16 @@
     "wait-for-db": "node ./.config/scripts/wait-for-db.js",
     "deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
     "dev": "npm run db:generate && doppler run -- robo dev",
-    "start:dev": "node dist/index.js"
+    "start:dev": "node dist/index.js",
+    "lint:check": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
+    "lint:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
   },
   "keywords": [],
   "author": "jakemackie",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@biomejs/biome": "2.1.4",
     "@types/node": "^24.2.0",
     "pg": "^8.16.3",
     "prisma": "^6.13.0",
@@ -35,10 +38,10 @@
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
+    "@swc/core": "^1.13.3",
     "discord.js": "^14.21.0",
     "dotenv": "^17.2.1",
     "fast-average-color-node": "^3.1.0",
-    "robo.js": "^0.10.30",
-    "@swc/core": "^1.13.3"
+    "robo.js": "^0.10.30"
   }
 }

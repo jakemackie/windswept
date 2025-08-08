@@ -3,8 +3,6 @@ import {
   type Message 
 } from 'discord.js';
 
-import { client } from "robo.js";
-
 import db from '@/database/db.js';
 
 export default async (message: Message) => {
@@ -39,7 +37,7 @@ export default async (message: Message) => {
     } else if (parts.length === 2) {
       duration = parts.join(' and ');
     } else {
-      duration = parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+      duration = `${parts.slice(0, -1).join(', ')} and ${parts[parts.length-1]}`;
     }
 
     // Send a welcome back embed
