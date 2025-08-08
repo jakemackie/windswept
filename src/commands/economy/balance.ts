@@ -5,7 +5,7 @@ import {
 
 import { createCommandConfig, type CommandResult } from 'robo.js';
 
-import db from '@/database/db.js';
+import db from '../../database/db.js';
 
 export const config = createCommandConfig(
 	{

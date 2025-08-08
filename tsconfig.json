@@ -1,23 +1,22 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "lib": ["esnext"],
-        "baseUrl": ".",
-        "paths": {
-          "~/*": ["src/*"],
-          "@/*": ["src/*"]
-        },
-        "allowJs": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "incremental": true
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
     },
-    "include": ["**/*.ts", "config/robo.ts"],
-    "exclude": ["node_modules", "dist"]
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true
+  },
+  "include": ["src/**/*.ts", "config/robo.ts"],
+  "exclude": ["node_modules", ".robo/build"]
 }

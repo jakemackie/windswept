@@ -3,7 +3,7 @@ import {
   type Message 
 } from 'discord.js';
 
-import db from '@/database/db.js';
+import db from '../database/db.js';
 
 export default async (message: Message) => {
   // Ignore bots and DMs

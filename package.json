@@ -4,25 +4,22 @@
   "description": "A production-grade Typescript Discord bot built to run on the newest tooling for a lovely, lightweight dev experience.",
   "main": "index.js",
   "scripts": {
-    "build": "rolldown -c .config/rolldown.config.ts",
-    "build:tsc": "tsc",
-    "build:watch": "rolldown -c .config/rolldown.config.ts --watch",
-    "start": "doppler run -- node dist/index.js",
-    "compose": "docker compose -p windswept --file docker/docker-compose.yml",
-    "stop": "npm run compose -- down",
-    "clean": "npm run compose -- down -v",
-    "dev:db": "npm run compose -- up -d",
-    "dev:db:down": "npm run stop",
-    "dev:db:clean": "npm run clean",
+    "docker": "docker compose -p windswept --file docker/docker-compose.yml",
+
+    "db:start": "npm run docker -- up -d",
+    "db:stop": "npm run docker -- down",
+    "db:wipe": "npm run docker -- down -v",
     "db:migrate": "doppler run -- npx prisma migrate deploy",
     "db:generate": "doppler run -- npx prisma generate",
     "db:studio": "doppler run -- npx prisma studio",
-    "wait-for-db": "node ./.config/scripts/wait-for-db.js",
-    "deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
-    "dev": "npm run db:generate && doppler run -- robo dev",
-    "start:dev": "node dist/index.js",
-    "lint:check": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
-    "lint:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
+    "db:wait-for-db": "node ./.config/scripts/wait-for-db.js",
+    "db:deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
+
+    "bot:start": "doppler run -- robo dev",
+
+    "dev": "npm run db:generate && npm run bot:start",
+    "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
+    "dev:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
   },
   "keywords": [],
   "author": "jakemackie",
