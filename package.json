@@ -6,18 +6,18 @@
   "scripts": {
     "docker": "docker compose -p windswept --file docker/docker-compose.yml",
 
-    "db:start": "npm run docker -- up -d",
-    "db:stop": "npm run docker -- down",
-    "db:wipe": "npm run docker -- down -v",
-    "db:migrate": "doppler run -- npx prisma migrate deploy",
-    "db:generate": "doppler run -- npx prisma generate",
-    "db:studio": "doppler run -- npx prisma studio",
+    "db:start": "pnpm docker -- up -d",
+    "db:stop": "pnpm docker -- down",
+    "db:wipe": "pnpm docker -- down -v",
+    "db:migrate": "doppler run -- pnpm prisma migrate deploy",
+    "db:generate": "doppler run -- pnpm prisma generate",
+    "db:studio": "doppler run -- pnpm prisma studio",
     "db:wait-for-db": "node ./.config/scripts/wait-for-db.js",
     "db:deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
 
-    "bot:start": "doppler run -- robo dev",
+    "bot:start": "doppler run -- pnpm robo dev",
 
-    "dev": "npm run db:generate && npm run bot:start",
+    "dev": "pnpm run db:generate && pnpm run bot:start",
     "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
     "dev:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
   },
