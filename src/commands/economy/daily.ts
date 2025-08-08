@@ -3,9 +3,15 @@ import {
 	type ChatInputCommandInteraction 
 } from 'discord.js';
 
-import { CommandResult } from 'robo.js';
+import { createCommandConfig, type CommandResult } from 'robo.js';
 
 import db from '@/database/db.js';
+
+export const config = createCommandConfig(
+	{
+		description: 'Claim your daily reward'
+	}
+)
 
 export default async (interaction: ChatInputCommandInteraction): Promise<CommandResult> => {
   const user = interaction.user;
