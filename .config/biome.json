@@ -3,7 +3,8 @@
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": true
+		"useIgnoreFile": true,
+		"defaultBranch": "deployment/staging"
 	},
 	"files": {
 		"includes": ["src/**/*.ts"],
@@ -11,7 +12,8 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+		"lineWidth": 80
 	},
 	"linter": {
 		"enabled": true,
@@ -21,7 +23,9 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "single"
+			"quoteStyle": "single",
+			"trailingCommas": "none",
+			"semicolons": "always"
 		}
 	},
 	"assist": {

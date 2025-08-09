@@ -30,6 +30,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.1.4
         version: 2.1.4
+      '@biomejs/cli-darwin-arm64':
+        specifier: 2.1.4
+        version: 2.1.4
       '@commitlint/cli':
         specifier: ^19.8.1
         version: 19.8.1(@types/node@24.2.0)(typescript@5.9.2)
@@ -1174,8 +1177,7 @@ snapshots:
       '@biomejs/cli-win32-arm64': 2.1.4
       '@biomejs/cli-win32-x64': 2.1.4
 
-  '@biomejs/cli-darwin-arm64@2.1.4':
-    optional: true
+  '@biomejs/cli-darwin-arm64@2.1.4': {}
 
   '@biomejs/cli-darwin-x64@2.1.4':
     optional: true

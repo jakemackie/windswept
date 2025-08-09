@@ -20,12 +20,19 @@
     "commit:lint": "commitlint --config .config/commitlint.config.ts --edit",
     "prepare": "husky"
   },
-  "keywords": [],
+  "keywords": [
+    "docker",
+    "typescript",
+    "discordjs",
+    "prisma",
+    "robojs"
+  ],
   "author": "jakemackie",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
     "@biomejs/biome": "2.1.4",
+    "@biomejs/cli-darwin-arm64": "2.1.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
