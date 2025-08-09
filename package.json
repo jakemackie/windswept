@@ -17,7 +17,7 @@
     "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
     "dev:lint": "biome lint src --max-diagnostics=1000 --config-path .config/biome.json",
     "dev:fix": "biome lint --write src --max-diagnostics=1000 --config-path .config/biome.json",
-    "commit:lint": "commitlint --config .config/commitlint.config.js --edit",
+    "commit:lint": "commitlint --config .config/commitlint.config.ts --edit",
     "prepare": "husky"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "@biomejs/biome": "2.1.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/types": "^19.8.1",
     "@types/node": "^24.2.0",
     "husky": "^9.1.7",
     "pg": "^8.16.3",
