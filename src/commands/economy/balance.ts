@@ -1,35 +1,32 @@
-import { 
-	MessageFlags,
-	type ChatInputCommandInteraction 
-} from 'discord.js';
+import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
 
-import { createCommandConfig, type CommandResult } from 'robo.js';
+import { type CommandResult, createCommandConfig } from "robo.js";
 
-import db from '../../database/db.js';
+import db from "../../database/db.js";
 
-export const config = createCommandConfig(
-	{
-		description: 'Retrieve your balance'
+export const config = createCommandConfig({
+	description: "Retrieve your balance",
+});
+
+export default async (
+	interaction: ChatInputCommandInteraction,
+): Promise<CommandResult> => {
+	const user = interaction.user;
+
+	try {
+		const economyData = await db.economy.upsert({
+			where: { userId: user.id },
+			create: { userId: user.id, balance: 0 },
+			update: { balance: { increment: 0 } },
+		});
+
+		await interaction.reply(`Your balance is **${economyData.balance}**`);
+	} catch (error) {
+		console.error(error);
+
+		await interaction.reply({
+			content: "Failed to retrieve balance. Please try again.",
+			flags: MessageFlags.Ephemeral,
+		});
 	}
-)
-
-export default async (interaction: ChatInputCommandInteraction): Promise<CommandResult> => {
-  const user = interaction.user;
-
-  try {
-    const economyData = await db.economy.upsert({
-      where: { userId: user.id },
-      create: { userId: user.id, balance: 0 },
-      update: { balance: { increment: 0 } }
-    });
-
-    await interaction.reply(`Your balance is **${economyData.balance}**`);
-  } catch (error) {
-    console.error(error);
-
-    await interaction.reply({ 
-      content: 'Failed to retrieve balance. Please try again.', 
-      flags: MessageFlags.Ephemeral 
-    });
-  }
 };
