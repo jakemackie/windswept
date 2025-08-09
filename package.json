@@ -18,8 +18,8 @@
     "bot:start": "pnpm robo start",
 
     "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
-    "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
-    "dev:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
+    "dev:lint": "biome lint src --max-diagnostics=1000 --config-path .config/biome.json",
+    "dev:fix": "biome lint --write src --max-diagnostics=1000 --config-path .config/biome.json"
   },
   "keywords": [],
   "author": "jakemackie",
