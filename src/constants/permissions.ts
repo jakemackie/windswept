@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from 'discord.js';
+import type { PermissionFlagsBits } from 'discord.js';
 
 export const permissionLabels: Partial<Record<keyof typeof PermissionFlagsBits, string>> = {
   CreateInstantInvite: 'Create Invite',

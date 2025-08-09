@@ -4,34 +4,29 @@
   "description": "A production-grade Typescript Discord bot built to run on the newest tooling for a lovely, lightweight dev experience.",
   "main": "index.js",
   "scripts": {
-    "build": "rolldown -c .config/rolldown.config.ts",
-    "build:tsc": "tsc",
-    "build:watch": "rolldown -c .config/rolldown.config.ts --watch",
+    "docker": "docker compose -p windswept --file docker/docker-compose.yml",
 
-    "start": "doppler run -- node dist/index.js",
-    "compose": "docker compose -p windswept --file docker/docker-compose.yml",
-    
-    "stop": "npm run compose -- down",
-    "clean": "npm run compose -- down -v",
+    "db:start": "pnpm docker -- up -d",
+    "db:stop": "pnpm docker -- down",
+    "db:wipe": "pnpm docker -- down -v",
+    "db:migrate": "doppler run -- pnpm prisma migrate deploy",
+    "db:generate": "doppler run -- pnpm prisma generate",
+    "db:studio": "doppler run -- pnpm prisma studio",
+    "db:wait-for-db": "node ./.config/scripts/wait-for-db.js",
+    "db:deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
 
-    "dev:db": "npm run compose -- up -d",
-    "dev:db:down": "npm run stop",
-    "dev:db:clean": "npm run clean",
+    "bot:start": "pnpm robo dev",
 
-    "db:migrate": "doppler run -- npx prisma migrate deploy",
-    "db:generate": "doppler run -- npx prisma generate",
-    "db:studio": "doppler run -- npx prisma studio",
-
-    "wait-for-db": "node ./.config/scripts/wait-for-db.js",
-    "deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
-    "dev": "npm run db:generate && npm run build && npm run dev:db && npm run wait-for-db && npm run db:migrate && npm run start",
-    "start:dev": "node dist/index.js"
+    "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
+    "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
+    "dev:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
   },
   "keywords": [],
   "author": "jakemackie",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@biomejs/biome": "2.1.4",
     "@types/node": "^24.2.0",
     "pg": "^8.16.3",
     "prisma": "^6.13.0",
@@ -40,8 +35,10 @@
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
+    "@swc/core": "^1.13.3",
     "discord.js": "^14.21.0",
     "dotenv": "^17.2.1",
-    "fast-average-color-node": "^3.1.0"
+    "fast-average-color-node": "^3.1.0",
+    "robo.js": "^0.10.30"
   }
 }
