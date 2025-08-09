@@ -15,9 +15,9 @@
     "db:wait-for-db": "node ./.config/scripts/wait-for-db.js",
     "db:deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
 
-    "bot:start": "doppler run -- pnpm robo dev",
+    "bot:start": "pnpm robo dev",
 
-    "dev": "pnpm run db:generate && pnpm run bot:start",
+    "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
     "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
     "dev:fix": "biome lint --write . --max-diagnostics=1000 --config-path .config/biome.json"
   },
