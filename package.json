@@ -12,10 +12,10 @@
     "db:migrate": "doppler run -- pnpm prisma migrate deploy",
     "db:generate": "doppler run -- pnpm prisma generate",
     "db:studio": "doppler run -- pnpm prisma studio",
-    "db:wait-for-db": "node ./.config/scripts/wait-for-db.js",
-    "db:deploy": "doppler run -- node ./.config/scripts/deploy-commands.js",
 
-    "bot:start": "pnpm robo dev",
+    "bot:build": "pnpm robo build",
+    "bot:dev": "pnpm robo dev",
+    "bot:start": "pnpm robo start",
 
     "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
     "dev:lint": "biome lint . --max-diagnostics=1000 --config-path .config/biome.json",
