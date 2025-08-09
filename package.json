@@ -5,21 +5,20 @@
   "main": "index.js",
   "scripts": {
     "docker": "docker compose -p windswept --file docker/docker-compose.yml",
-
     "db:start": "pnpm docker -- up -d",
     "db:stop": "pnpm docker -- down",
     "db:wipe": "pnpm docker -- down -v",
     "db:migrate": "doppler run -- pnpm prisma migrate deploy",
     "db:generate": "doppler run -- pnpm prisma generate",
     "db:studio": "doppler run -- pnpm prisma studio",
-
     "bot:build": "pnpm robo build",
     "bot:dev": "pnpm robo dev",
     "bot:start": "pnpm robo start",
-
     "dev": "pnpm run db:generate && doppler run -- pnpm run bot:start",
     "dev:lint": "biome lint src --max-diagnostics=1000 --config-path .config/biome.json",
-    "dev:fix": "biome lint --write src --max-diagnostics=1000 --config-path .config/biome.json"
+    "dev:fix": "biome lint --write src --max-diagnostics=1000 --config-path .config/biome.json",
+    "commit:lint": "commitlint --config .config/commitlint.config.js --edit",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "jakemackie",
@@ -27,7 +26,10 @@
   "type": "module",
   "devDependencies": {
     "@biomejs/biome": "2.1.4",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/node": "^24.2.0",
+    "husky": "^9.1.7",
     "pg": "^8.16.3",
     "prisma": "^6.13.0",
     "rolldown": "^1.0.0-beta.31",
